@@ -6,7 +6,7 @@ var PORT = process.env.port || 3000;
 
 var sqlite3 = require('sqlite3').verbose(); 
  
-//var db = new sqlite3.Database('C:/Users/Dipty/Desktop/CSC155/chinook.db'); 
+var db = new sqlite3.Database('./datasets/nutrition.db'); 
 
 // Assigns / Sets view engine extension to ejs
 app.set('view engine', 'ejs');
