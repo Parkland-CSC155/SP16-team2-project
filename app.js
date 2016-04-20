@@ -4,8 +4,7 @@ var routes = require('./routes');
 //Lets define a port we want to listen to
 var PORT = process.env.port || 3000;
 
-var sqlite3 = require('sqlite3').verbose(); 
- 
+var sqlite3 = require('sqlite3').verbose();  
 var db = new sqlite3.Database('./datasets/nutrition.db'); 
 
 // Assigns / Sets view engine extension to ejs
@@ -16,8 +15,10 @@ app.locals.pagetitle = "Nutrition Database ";
 
 // Retrieve the value of a setting with app.get().
 app.get('/', routes.index);
+// validate all requests to the /api -based routes
 
 app.use("/api", require("./routes/api"));
+//app.use("/api", routes.api);
 
 app.get('*', function(req, res) {
   res.send('Bad Route');
