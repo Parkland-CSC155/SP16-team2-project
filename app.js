@@ -6,7 +6,7 @@ var PORT = process.env.port || 3000;
 
 var sqlite3 = require('sqlite3').verbose(); 
  
-var db = new sqlite3.Database('C:/Users/Dipty/Desktop/CSC155/chinook.db'); 
+//var db = new sqlite3.Database('C:/Users/Dipty/Desktop/CSC155/chinook.db'); 
 
 // Assigns / Sets view engine extension to ejs
 app.set('view engine', 'ejs');
@@ -16,6 +16,8 @@ app.locals.pagetitle = "Nutrition Database ";
 
 // Retrieve the value of a setting with app.get().
 app.get('/', routes.index);
+
+app.use("/api", require("./routes/api"));
 
 app.get('*', function(req, res) {
   res.send('Bad Route');
