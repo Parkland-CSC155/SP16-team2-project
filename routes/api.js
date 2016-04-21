@@ -31,21 +31,43 @@ app.use(function(req, res, next){
    next();
 });
 
-router.get("search", function(req, res){
-    res.send("Hello World");       
-
-    var nutriSql = ` 
-                SELECT * from NutritionData
-                WHERE  NDM_NO BETWEEN "01001" AND "01025" 
-                `; 
-    db.all(nutriSql, "USA", function(nutriErr, nutriRows){ 
+//- `/api/search/{searchText}?page={pageNumber}&apiKey={apiKey}` 
+router.get("/search/:text", function(req, res){
+    res.send("Search Text"); 
+    var searchText = req.params.text;
+    var nutriSql = "SELECT * from NutritionData WHERE  Shrt_Desc like '" + searchText +"%'";    
+    db.all(nutriSql, function(nutriErr, nutriRows){ 
             if(nutriErr) 
-                console.error(nutriErr);  
-                
+                console.error(nutriErr);   
+                             
             console.log(nutriRows); 
-    });
+    });    
 });
 
-router.get("list", function(req, res){
-    res.send("Hello World");
+//- `/api/list?page={pageNumber}&apiKey={apiKey}`
+router.get("/list", function(req, res){
+    res.send("Listing");
+    var pgNum = req.params.page;    
+    var start = 25 * (pgNum - 1)  + 1;
+    var end = start + 25;
+    var sqlString = "SELECT * from NutritionData WHERE NDB_No BETWEEN " + start + "AND" + end;
+    db.all(sqlString, function(nutriErr, nutriRows){ 
+            if(nutriErr) 
+                console.error(nutriErr); 
+                                 
+            console.log(nutriRows); 
+    });    
+});
+
+//- `/api/{id}&apiKey={apiKey}` 
+router.get("/:id", function(req, res){
+    res.send("id");
+    var id = req.params.id;
+    var sqlStr = "SELECT * from NutritionData WHERE NDB_No = " + id;
+    db.all(sqlStr, function(nutriErr, nutriRows){ 
+            if(nutriErr) 
+                console.error(nutriErr);     
+                             
+            console.log(nutriRows); 
+    }); 
 });
