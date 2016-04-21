@@ -6,15 +6,26 @@
 
 <div class="container">
   <h1><%= pagetitle %>--<%= title %></h1>
-  <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Assumenda, quod, praesentium dolor velit culpa cupiditate odio nihil voluptates aliquid eum dolore eligendi quas nobis nam nesciunt odit pariatur minus cum.</p>
-
-  <% if (typeof(users) !== 'undefined') { %>
-    <ul>
-      <% for(var i = 0; i < users.length; i++) { %>
-        <li><%= users[i] %></li>
-      <% } %>
-    </ul>
-  <% } %>
+  
+  <form name="login">
+            Username<input type="text" name="userid"/>
+            Password<input type="password" name="pswrd"/>
+            <input type="button" onclick="check(this.form)" value="Login"/>
+            <input type="reset" value="Cancel"/>
+        </form>
+        <script language="javascript">
+            function check(form) {                              /*function to check userid & password*/
+                /*the following code checkes whether the entered userid and password are matching*/
+                
+                if(form.userid.value == "myuserid" && form.pswrd.value == "mypswrd") {
+                //replace with if(form.userid.value == form.pswrd.value)
+                    window.open('target.html')                    /*opens the target page while Id & password matches*/
+                }
+                else {
+                    alert("Error Password or Username")             /*displays error message*/
+                }
+            }
+        </script>
 
 </div><!-- container -->
 
