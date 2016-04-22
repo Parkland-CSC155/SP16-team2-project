@@ -4,6 +4,11 @@ exports.index = function(req, res) {
   res.render('default', {
     title: 'Home'
   });
+  //var login = $("#myBtn");
+  var login = document.getElementById("#myBtn");
+  login.click(function(){
+        $("#myModal").modal();
+  });
 };
 
 exports.login = function(req, res){
