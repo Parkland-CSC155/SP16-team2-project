@@ -16,6 +16,8 @@ app.locals.pagetitle = "Nutrition Database ";
 // Retrieve the value of a setting with app.get().
 app.get('/', routes.index);
 // validate all requests to the /api -based routes
+app.get('/search', routes.api);
+
 /*
 app.use("/api", require("./routes/api"));
 //app.use("/api", routes.api);
