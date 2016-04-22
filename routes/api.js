@@ -31,7 +31,7 @@ app.use(function(req, res, next){
    next();
 });
 
-//- `/api/search/{searchText}?page={pageNumber}&apiKey={apiKey}` 
+/*- `/api/search/{searchText}?page={pageNumber}&apiKey={apiKey}` 
 router.get("/search/:text", function(req, res){
     res.send("Search Text"); 
     var searchText = req.params.text;
@@ -71,3 +71,4 @@ router.get("/:id", function(req, res){
             console.log(nutriRows); 
     }); 
 });
+*/
