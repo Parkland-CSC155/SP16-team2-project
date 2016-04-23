@@ -11,6 +11,13 @@ exports.login = function(req, res){
     
 };
 
+exports.calculator = function(req, res){
+    res.render('calc', {
+       title: 'Calculator Page',
+       search: 'Search the database for food'
+    });
+};
+
 var express = require("express");
 var router = express.Router();
 var app = express();          

@@ -18,6 +18,8 @@ app.get('/', routes.index);
 // validate all requests to the /api -based routes
 app.get('/search', routes.api);
 
+app.get('/calculator', routes.calculator);
+
 /*
 app.use("/api", require("./routes/api"));
 //app.use("/api", routes.api);
