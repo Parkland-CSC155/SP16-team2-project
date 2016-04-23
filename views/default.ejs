@@ -4,12 +4,35 @@
 <body>
 <% include partials/page/header.ejs %>
 
-<div class="container">
+
+
+<nav class="navbar navbar-inverse">
+          <div class="navbar-header">
+            
+ <a class="navbar-brand">Nutrition</a> 
+        </div>
+       <div id="navbar" class="collapse navbar-collapse navbar-collapse">
+         
+          <div id="navbar1" class="navbar-collapse collapse">
+          
+            
+    
+          
+          
+          <form class="navbar-form navbar-right">
+       <button onclick type="button" class="btn btn-default btn-lg" id="myBtn">Login</button>
+         </form>
+        
+        </div>
+      </div>
+      </div>
+   
+    
+</nav>
   <h1><%= pagetitle %> -- <%= title %></h1>
 
 
-  <!-- Trigger the modal with a button -->
-  <button type="button" class="btn btn-default btn-lg" id="myBtn">Login</button>
+  
 
   <!-- Modal -->
   <div class="modal fade" id="myModal" role="dialog">
@@ -45,11 +68,20 @@
       
     </div>
   </div> 
+<br>
+<br>
 
  
 
 </div><!-- container -->
-
+<div class ="col-md-5">
+<input type="text" name="search" placeholder="Search..">
+<input id="id1" type="number" min="1" max="4000">
+<button onclick="myFunction()">OK</button>
+</div>
+<div class =col-md-4">
+//calc area
+</div>
   <% include partials/page/footer.ejs %>
   <% include partials/page/jsdefaults.ejs %>
 </body>
