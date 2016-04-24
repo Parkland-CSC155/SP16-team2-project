@@ -5,10 +5,9 @@ const APIKEY = 'abcd'; // some unique value that attackers cannot guess
 var sqlite3 = require('sqlite3').verbose();  
 var db = new sqlite3.Database('./datasets/nutrition.db'); 
 
-app.use(function(req, res, next){
-    res.send("inside app.use function");
-    res.send('%s %s %s', req.method, req.url, req.path);
+router.use(function(req, res, next){
     if(req.baseUrl !== "/api"){
+        res.send("no api");
         next();
         return;
     }
@@ -33,10 +32,9 @@ app.use(function(req, res, next){
 });
 
 // `/api/search/{searchText}?page={pageNumber}&apiKey={apiKey}` 
-router.get("/search/:text/page=:page", function(req, res){
-   // res.send("Search Text"); 
+router.get("/search/:text", function(req, res){
     var searchText = req.params.text;    
-    var pgNum = req.params.page || 1;  
+    var pgNum = req.query.page || 1;  
     console.log("page num is " + pgNum); 
     pgNum = Number(pgNum);       
     var start = 25 * (pgNum - 1);
@@ -51,10 +49,9 @@ router.get("/search/:text/page=:page", function(req, res){
     }); 
 });
 
-//- `/api/list?page={pageNumber}&apiKey={apiKey}`//router.get("/list/:page", function(req, res){
-router.get("/list/page=:page", function(req, res){
-    //res.send("Listing");
-    var pgNum = req.params.page || 1;
+//- `/api/list?page={pageNumber}&apiKey={apiKey}`
+    router.get("/list", function(req, res){
+    var pgNum = req.query.page || 1;
     console.log("page num is " + pgNum); 
     pgNum = Number(pgNum);
     var start = 25 * (pgNum - 1);
@@ -74,7 +71,6 @@ router.get("/list/page=:page", function(req, res){
 
 //- `/api/{id}&apiKey={apiKey}` 
 router.get("/:id", function(req, res){
-    //res.send("inside id");
     var id = req.params.id;
     console.log("id is " + id);
     var sqlStr = "SELECT * from NutritionData WHERE NDB_No = '" + id + "'";

@@ -2,7 +2,7 @@ var express = require('express');
 var app = express();            //creates an express application
 var routes = require('./routes');
 var bodyParser = require('body-parser');
-var api = require("./routes/api.js");
+
 //Lets define a port we want to listen to
 var PORT = process.env.port || 3000;
 
@@ -22,15 +22,11 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.get('/', routes.index);
 
 // validate all requests to the /api -based routes
-//app.get('/api', routes.api);
-
 app.get('/calculator', routes.calculator);
 
 app.use(express.static('public'));
 
-//throws new TypeError('Router.use() requires middleware function but got a ' + gettype(fn));
-//app.get("/api", require("./routes/api"));
-app.use('/api', api);
+app.use("/api", require("./routes/api"));
 
 app.get('*', function(req, res) {
   res.send('Bad Route');
