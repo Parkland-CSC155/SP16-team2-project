@@ -1,3 +1,10 @@
+var express = require("express");
+var router = express.Router();
+var app = express();          
+const APIKEY = 'abcd'; // some unique value that attackers cannot guess
+var sqlite3 = require('sqlite3').verbose();  
+var db = new sqlite3.Database('./datasets/nutrition.db'); 
+
 exports.index = function(req, res) {
 //  res.send("hello World");
   
@@ -7,8 +14,7 @@ exports.index = function(req, res) {
 };
 
 exports.login = function(req, res){
-    res.send("login page");
-    
+    res.send("login page");    
 };
 
 exports.calculator = function(req, res){
@@ -18,16 +24,10 @@ exports.calculator = function(req, res){
     });
 };
 
-var express = require("express");
-var router = express.Router();
-var app = express();          
-const APIKEY = 'abcd'; // some unique value that attackers cannot guess
-var sqlite3 = require('sqlite3').verbose();  
-var db = new sqlite3.Database('./datasets/nutrition.db'); 
-
+/*
 exports.api = function(req, res){
-    
-    app.use(function(req, res, next){
+    app.use("/api", router);
+    router.use(function(req, res, next){
     
     if(req.baseUrl !== "/api"){
         next();
@@ -35,7 +35,7 @@ exports.api = function(req, res){
     }
     
     // REQUEST: www.blah.com/api?apiKey=abcd
-    var reqApiKey = req.query.apiKey;
+    var reqApiKey = req.query.apiKey || 'abcd';
     
     if(!reqApiKey){
             res.status(401);
@@ -52,11 +52,11 @@ exports.api = function(req, res){
     // all good at this point, so let the request move on through the pipeline
     next();
     });
-    - `/api/search/{searchText}?page={pageNumber}&apiKey={apiKey}` 
-    router.get("/search/:text", function(req, res){
+    //- `/api/search/{searchText}?page={pageNumber}&apiKey={apiKey}` 
+    router.get("/api/search/:text?apiKey=", function(req, res){
         res.send("Search Text"); 
         var searchText = req.params.text;
-        var nutriSql = "SELECT * from NutritionData WHERE  Shrt_Desc like '" + searchText +"%'";    
+        var nutriSql = "SELECT * from NutritionData WHERE  Shrt_Desc like '" + searchText + "%'";    
         db.all(nutriSql, function(nutriErr, nutriRows){ 
                 if(nutriErr) 
                     console.error(nutriErr);   
@@ -66,9 +66,10 @@ exports.api = function(req, res){
     });
 
     //- `/api/list?page={pageNumber}&apiKey={apiKey}`
-    router.get("/list", function(req, res){
+    router.get("/api/list?page=", function(req, res){
         res.send("Listing");
-        var pgNum = req.params.page;    
+        var pgNum = req.params.page || 1;   
+        console.log("page number is " + pgNum); 
         var start = 25 * (pgNum - 1)  + 1;
         var end = start + 25;
         var sqlString = "SELECT * from NutritionData WHERE NDB_No BETWEEN " + start + "AND" + end;
@@ -81,7 +82,7 @@ exports.api = function(req, res){
     });
 
     //- `/api/{id}&apiKey={apiKey}` 
-    router.get("/:id", function(req, res){
+    router.get("/api/:id", function(req, res){
         res.send("id");
         var id = req.params.id;
         var sqlStr = "SELECT * from NutritionData WHERE NDB_No = " + id;
@@ -93,4 +94,4 @@ exports.api = function(req, res){
         }); 
     });
 };
-
+*/
