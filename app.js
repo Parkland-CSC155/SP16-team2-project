@@ -3,15 +3,17 @@ var app = express();            //creates an express application
 var routes = require('./routes');
 var passport = require('passport');
 var Strategy = require('passport-local').Strategy;
-var db = require('./db');
+var userDb = require('./datasets');
+var bodyParser = require('body-parser');
 
+//var connectionString = process.env.MS_TableConnectionString;   //my db credentials
 //Lets define a port we want to listen to
 var PORT = process.env.port || 3000;
 
 var sqlite3 = require('sqlite3').verbose();  
 var db = new sqlite3.Database('./datasets/nutrition.db'); 
 passport.use(new Strategy(function (username, password, cb) { //cb-callback
-    db.users.findByUsername(username, function (err, user) {
+    userDb.users.findByUsername(username, function (err, user) {
         if (err) { return cb(err); }
         if (!user) { return cb(null, false); }
         if (user.password != password) { return cb(null, false); }
@@ -36,10 +38,16 @@ app.set('view engine', 'ejs');
 // The app.locals object has properties that are local variables within the application.
 app.locals.pagetitle = "Nutrition Database ";
 
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: false }));
+
 // Retrieve the value of a setting with app.get().
 app.get('/', routes.index);
+
 // validate all requests to the /api -based routes
-app.get('/search', routes.api);
+app.get('/calculator', routes.calculator);
+
+app.use(express.static('public'));
 
 // Use application-level middleware for common functionality, including
 // logging, parsing, and session handling.
@@ -56,8 +64,10 @@ app.use(require('express-session')({
 app.use(passport.initialize());
 app.use(passport.session());
 
+app.get("/session-example", function(req, res, next){
+
 // ensure that the data on the session
-  // has been set for the first request
+  //has been set for the first request
   if(!req.session.viewCount){
     req.session.viewCount = 0;
   }
@@ -72,6 +82,7 @@ app.use(passport.session());
   ];
 
   res.send("View Count: " + req.session.viewCount);
+});
 // Define routes.
 app.get('/',
   function(req, res) {
@@ -100,10 +111,8 @@ app.get('/profile',
   function(req, res){
     res.render('profile', { user: req.user });
   });
-/*
 app.use("/api", require("./routes/api"));
-//app.use("/api", routes.api);
-*/
+
 app.get('*', function(req, res) {
   res.send('Bad Route');
 });
