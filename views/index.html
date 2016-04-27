@@ -1,74 +1,137 @@
-<!--<!DOCTYPE html>
+<!DOCTYPE html>
 <html>
 <head>
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
   <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
-  <style>
-  .modal-header, h4, .close {
-      background-color: #5cb85c;
-      color:white !important;
-      text-align: center;
-      font-size: 30px;
-  }
-  .modal-footer {
-      background-color: #f9f9f9;
-  }
-  </style>
+<script src="js/login.js"></script>
+<script src="js/onClick.js"></script>
+<script src="app.js"></script>
+<script src="routes/api.js"></script>
+<script src="routes/index.js"></script>
 </head>
 <body>
-
-<div class="container">
-  <h2>Nutrition</h2>
-  <!-- Trigger the modal with a button 
-  <button type="button" class="btn btn-default btn-lg" id="myBtn">Login</button>
-
-  <!-- Modal 
-  <div class="modal fade" id="myModal" role="dialog">
-    <div class="modal-dialog">
-    
-      <!-- Modal content-
-      <div class="modal-content">
-        <div class="modal-header" style="padding:35px 50px;">
-          <button type="button" class="close" data-dismiss="modal">&times;</button>
-          <h4><span class="glyphicon glyphicon-lock"></span> Login</h4>
-        </div>
-        <div class="modal-body" style="padding:40px 50px;">
-          <form role="form">
-            <div class="form-group">
-              <label for="usrname"><span class="glyphicon glyphicon-user"></span> Username</label>
-              <input type="text" class="form-control" id="usrname" placeholder="Enter email">
-            </div>
-            <div class="form-group">
-              <label for="psw"><span class="glyphicon glyphicon-eye-open"></span> Password</label>
-              <input type="text" class="form-control" id="psw" placeholder="Enter password">
-            </div>
-            <div class="checkbox">
-              <label><input type="checkbox" value="" checked>Remember me</label>
-            </div>
-              <button type="submit" class="btn btn-success btn-block"><span class="glyphicon glyphicon-off"></span> Login</button>
-          </form>
-        </div>
-        <div class="modal-footer">
-          <button type="submit" class="btn btn-danger btn-default pull-left" data-dismiss="modal"><span class="glyphicon glyphicon-remove"></span> Cancel</button>
-         
-        </div>
-      </div>
-      
+  <nav class="navbar navbar-inverse">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <a class="navbar-brand" href="#">Nutrition Database</a>
     </div>
-  </div> 
-</div>
+    <div>
+      <ul class="nav navbar-nav">
+        <li class="active"><a href="#">Home</a></li>
+        <li><a href="../../calc.ejs">Calc</a></li>
+       
+       
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        <li class="dropdown"><a class="dropdown-toggle" data-toggle="dropdown" href="#">Login <span class="glyphicon glyphicon-log-in"></span></a>
+          <div class="dropdown-menu">
+            <form id="formLogin" class="form container-fluid">
+              <div class="form-group">
+                <label for="usr">Name:</label>
+                <input type="text" class="form-control" id="usr">
+              </div>
+              <div class="form-group">
+                <label for="pwd">Password:</label>
+                <input type="password" class="form-control" id="pwd">
+              </div>
+              <button type="button" id="btnLogin" class="btn btn-block">Login</button>
+            </form>
+            <div class="container-fluid">
+              <br>
+              <a class="small" href="#">Forgot password?</a>
+            </div> 	
+          </div>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>
+<div class="col-lg-7">
+  <h1>Nutrition Database</h1>
+  
+  <form class="pull-right" id="form_id" method="post" name="myform">
+      <label>User Name :</label>
+      <input type="text" name="username" id="username"/>
+      <label>Password :</label>
+      <input type="password" name="password" id="password"/>
+      <input type="button" value="Login" id="submit" onclick="validate()"/>
+    </form>
+  <span><b class="note">Note : </b>Please use following username and password. <br/><b class="valid">User Name : getUserName<br/>Password : password#123</b></span>
+  
+  
+  <table border="1" width="100%"> 
+<tr>
+<th width="10%">Number</th> 
+<th width="10%">Shrt_Desc</th> 
+<th width="10%">Water_(g)</th> 
+<th width="10%">Engery_Kcal</th> 
+</tr>
+
+<tr> 
+<td>001</td> 
+<td></td> 
+<td></td> 
+<td></td> 
+
+</tr>
+
+
+<tr> 
+<td>002</td> 
+<td></td> 
+<td></td> 
+<td></td> 
+
+</tr> 
+
+
+<tr> 
+<td>003</td> 
+<td></td> 
+<td></td> 
+<td></td> 
+
+</tr> 
+
+
+<tr> 
+<td>004</td> 
+<td></td> 
+<td></td> 
+<td></td> 
+
+</tr> 
+
+
+<tr> 
+<td>005</td> 
+<td></td> 
+<td></td> 
+<td></td> 
+
+</tr> 
  
-<script>
-$(document).ready(function(){
-    $("#myBtn").click(function(){
-        $("#myModal").modal();
-    });
-});
-</script>
 
+</table>
+</div>
+<div class="col-md-4">
+  <h2>Calculater Area</h2>
+  
+  <form action="js/onClick.js" method="get">
+    <input id="food" name="food" placeholder="Please enter food name" type="text">  
+    <!-- <input id="portion" name="portion" placeholder="Portion sizes" type="text"> 
+    add portion after a select button when the database populates
+    <input onclick="Submitted()" type="button" value="Search">
+    -->
+    <a href = "javascript: Submitted()">Search</a>
+</form>
+</div>
+
+
+ 
+  </div>
+</div><!-- container -->
 </body>
-</html>-->
-
-// will be deleted.
+</html>
