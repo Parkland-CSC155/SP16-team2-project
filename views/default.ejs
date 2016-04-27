@@ -1,48 +1,16 @@
 <!DOCTYPE html>
 <html lang="en">
 <head><% include partials/page/head.ejs %></head>
+      <% include partials/page/jsdefaults.ejs %>
 <body>
 <% include partials/page/header.ejs %>
 <% include partials/page/jsdefaults.ejs %>
 
 <div class="container">
   <h1><%= pagetitle %> -- <%= title %></h1>
- 
   <div class="main">
-    <h2>Login Form Validation</h2>
-    <form id="form_id" method="post" name="myform">
-      <label>User Name :</label>
-      <input type="text" name="username" id="username"/>
-      <label>Password :</label>
-      <input type="password" name="password" id="password"/>
-      <input type="button" value="Login" id="submit" onclick="validate()"/>
-    </form>
-    <span><b class="note">Note : </b>Please use following username and password. <br/><b class="valid">User Name : getUserName<br/>Password : password#123</b></span>
   </div>
 </div><!-- container -->
- 
-<!--
-
-//OR
-
-
-<?php
-
-function  db_connect($host = "localhost", $user="username", $pass="graeme") {
-
-	$db = mysql_connect($host, $username, $password);
-
-	return $db;
-
-}
-
-$old_db = db_connect();
-
-$new_host = "site.com";
-
-$new_db = db_connect($new_host);
-
-?>
 
 
   <% include partials/page/footer.ejs %>
