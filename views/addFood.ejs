@@ -3,6 +3,8 @@
 <head><% include partials/page/head.ejs %>
 
 <script src="js/onClick.js"></script>
+<script src="js/list.js"></script>
+<link rel="stylesheet" type="text/css" href="css/style.css">
 
 </head>
 
@@ -29,6 +31,32 @@
         <option value="test">test</option>
     </select>
   </p>
+  
+  
+  
+  
+  
+<section class="container">
+    <div>
+        <select id="leftValues" size="5" multiple></select>
+    </div>
+    <div>
+        <input type="button" id="btnLeft" value="&lt;&lt;" />
+        <input type="button" id="btnRight" value="&gt;&gt;" />
+    </div>
+    <div>
+        <select id="rightValues" size="4" multiple>
+            <option>1</option>
+            <option>2</option>
+            <option>3</option>
+        </select>
+        <div>
+            <input type="text" id="txtRight" />
+        </div>
+    </div>
+</section>
+  
+  
 
 
 
