@@ -14,50 +14,22 @@
   <h1><%= pagetitle %> -- <b><%= title %></b></h1>
   <p><a href="/calculator">Back to cart</a></p>
 
-
-<!-- working on form action -->
-<form action="js/onClick.js" method="get">
-    <input id="food" name="food" placeholder="Please enter food name" type="text">  
-    <!-- <input id="portion" name="portion" placeholder="Portion sizes" type="text"> 
-    add portion after a select button when the database populates
-    <input onclick="Submitted()" type="button" value="Search">
-    -->
-    <a href = "javascript: Submitted()">Search</a>
+<form action="/calculator/form" method="post">
+  <label><%= search %></label>
+  <input type="text" name="searchDB"/>
+  <button type="submit">Search</button>
+  
 </form>
-
-  <p align="center"><%= search %></p>    
-  <p align="left">
-    <select multiple size="20" style="width: 400px;">
-        <option value="test">test</option>
-    </select>
-  </p>
-  
-  
-  
-  
-  
-<section class="container">
-    <div>
-        <select id="leftValues" size="5" multiple></select>
-    </div>
-    <div>
-        <input type="button" id="btnLeft" value="&lt;&lt;" />
-        <input type="button" id="btnRight" value="&gt;&gt;" />
-    </div>
-    <div>
-        <select id="rightValues" size="4" multiple>
-            <option>1</option>
-            <option>2</option>
-            <option>3</option>
-        </select>
-        <div>
-            <input type="text" id="txtRight" />
-        </div>
-    </div>
-</section>
-  
-  
-
+ 
+    <form action="/calculator/submit">
+        <p align="left">
+            <select multiple size="20" style="width: 400px;">
+                <option value="test">test</option>
+            </select>
+                <button type="submit" value="Submit">Submit</button>
+                <button type="reset"     onclick="alert('Resetting the cart')" value="Reset">Reset</button>
+        </p>
+    </form>
 
 
   <% include partials/page/footer.ejs %>

@@ -63,9 +63,17 @@ app.use(require('express-session')({
 app.use(passport.initialize());
 app.use(passport.session());
 
+//calculator stuff
 app.get('/calculator', routes.calculator);
 
 app.get('/calculator/add', routes.add);
+
+app.post("/calculator/form", function(req, res, next){
+  var searchDB = req.body.searchDB;
+  console.log(searchDB);
+  
+  res.redirect("/calculator/add");
+});
 
 app.get("/session-example", function(req, res, next){
 
