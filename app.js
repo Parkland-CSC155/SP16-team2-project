@@ -64,12 +64,24 @@ app.use(passport.session());
 app.get('/', routes.index);
 app.get('/home', routes.home);
 // validate all requests to the /api -based routes
+
+//calculator stuff
 app.get('/calculator', routes.calculator);
+
+app.get('/calculator/add', routes.add);
+
+app.post("/calculator/form", function(req, res, next){
+  var searchDB = req.body.searchDB;
+  console.log(searchDB);
+  
+  res.redirect("/calculator/add");
+});
 
 app.get("/session-example", function(req, res, next){
 
 // ensure that the data on the session
   //has been set for the first request
+  
   if(!req.session.viewCount){
     req.session.viewCount = 0;
   }
@@ -82,7 +94,8 @@ app.get("/session-example", function(req, res, next){
   req.session.chosenIngredients = [
     { id: 1, qty: 3}
   ];
-
+  
+  console.log(req.session.chosenIngredients);
   res.send("View Count: " + req.session.viewCount);
 });
 /* Define routes.
