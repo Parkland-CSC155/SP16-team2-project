@@ -9,17 +9,18 @@ exports.index = function(req, res) {
 //  res.send("hello World");
   
   res.render('default', {
-    title: 'Home'
+    title: 'Home',
+    user: req.user 
   });
-  //var login = $("#myBtn");
+  /*var login = $("#myBtn");
   var login = document.getElementById("#myBtn");
   login.click(function(){
         $("#myModal").modal();
-  });
+  });*/
 };
 
-exports.login = function(req, res){
-    res.send("login page");    
+exports.home = function(req, res){
+    res.render("index", {});    
 };
 
 exports.calculator = function(req, res){
