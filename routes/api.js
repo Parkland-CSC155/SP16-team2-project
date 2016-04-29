@@ -58,34 +58,20 @@ router.get("/list", function(req, res){
     pgNum = Number(pgNum);
     var start = 25 * (pgNum - 1);
     //SELECT * from NutritionData WHERE  Shrt_Desc like 'a%' order by NDB_No offset 25 rows fetch next 5 rows only
-    //sql server --> var sqlString = "SELECT * from NutritionData order by NDB_No offset " + start + " rows fetch next 25 rows only";
+    //sql server --> var sqlString = "SELECT [Fiber_TD_(g)], [Cholestrl_(mg)] from NutritionData order by NDB_No offset " + start + " rows fetch next 25 rows only";
     //for sqlite
-    var sqlString = "SELECT NDB_No, Shrt_Desc, [Fiber_TD_(g)], [Cholestrl_(mg)]  from NutritionData order by Shrt_Desc limit 25 offset " + start; 
+    var sqlString = "SELECT NDB_No, Shrt_Desc, GmWt_Desc1, GmWt_Desc2 from NutritionData order by Shrt_Desc limit 25 offset " + start; 
  
     db.all(sqlString, function(nutriErr, nutriRows){ 
         if(nutriErr) 
             console.error(nutriErr); 
             
-        res.send(nutriRows);                   
-       // console.log(nutriRows);
-       /*
-       nutriRows.forEach(function(input){      
-            console.log(input);
-                   
-            res.render('list', {
-                number: input[0],
-                desc: input[1],
-                fiber: input[2],
-                cholestrl: input[3]
-            }) ;
-        });*/
-        /*
-         res.render('list', {
-             number: nutriRows[i][j],
-             desc: input[1],
-             fiber: input[2],
-             cholestrl: input[3]
-         });*/
+        //res.send(nutriRows);
+        
+        res.render('list', {
+            rows: nutriRows
+        });                   
+        console.log(nutriRows);
     });    
 });
 
