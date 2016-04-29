@@ -12,6 +12,7 @@ var PORT = process.env.port || 3000;
 
 var sqlite3 = require('sqlite3').verbose();  
 var db = new sqlite3.Database('./datasets/nutrition.db'); 
+
 passport.use(new Strategy(function (username, password, cb) { //cb-callback
     userDb.users.findByUsername(username, function (err, user) {
         if (err) { return cb(err); }
@@ -20,12 +21,13 @@ passport.use(new Strategy(function (username, password, cb) { //cb-callback
         return cb(null, user);
     });
 }));
+
 passport.serializeUser(function(user, cb) {
   cb(null, user.id);
 });
 
 passport.deserializeUser(function(id, cb) {
-  db.users.findById(id, function (err, user) {
+  userDb.users.findById(id, function (err, user) {
     if (err) { return cb(err); }
     cb(null, user);
   });
@@ -40,12 +42,6 @@ app.locals.pagetitle = "Nutrition Database ";
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
-
-// Retrieve the value of a setting with app.get().
-app.get('/', routes.index);
-
-// validate all requests to the /api -based routes
-app.get('/calculator', routes.calculator);
 
 app.use(express.static('public'));
 
@@ -63,6 +59,12 @@ app.use(require('express-session')({
 // session.
 app.use(passport.initialize());
 app.use(passport.session());
+
+// Retrieve the value of a setting with app.get().
+app.get('/', routes.index);
+app.get('/home', routes.home);
+// validate all requests to the /api -based routes
+app.get('/calculator', routes.calculator);
 
 app.get("/session-example", function(req, res, next){
 
@@ -83,12 +85,12 @@ app.get("/session-example", function(req, res, next){
 
   res.send("View Count: " + req.session.viewCount);
 });
-// Define routes.
+/* Define routes.
 app.get('/',
   function(req, res) {
     res.render('home', { user: req.user });
   });
-
+*/
 app.get('/login',
   function(req, res){
     res.render('login');
@@ -97,7 +99,7 @@ app.get('/login',
 app.post('/login', 
   passport.authenticate('local', { failureRedirect: '/login' }),
   function(req, res) {
-    res.redirect('/');
+    res.redirect('/home');
   });
   
 app.get('/logout',
@@ -111,6 +113,7 @@ app.get('/profile',
   function(req, res){
     res.render('profile', { user: req.user });
   });
+  
 app.use("/api", require("./routes/api"));
 
 app.get('*', function(req, res) {
