@@ -51,187 +51,20 @@
 <div class="col-lg-7">
   <h1>Nutrition Database</h1>
  
-  <table border="1" width="100%"> 
-<tr>
-<th width="10%">Number</th> 
-<th width="10%">Shrt_Desc</th> 
-<th width="10%">Fat_Sat_(g)</th> 
-<th width="10%">Cholestrl_(mg)</th> 
-</tr>
-
-<tr> 
-<td><%= number %></td> 
-<td><%= desc %></td> 
-<td><%= fiber %></td> 
-<td><%= cholestrl %></td> 
-
-</tr>
-
-<!--
-<tr> 
-<td>002</td> 
-<td></td> 
-<td></td> 
-<td></td> 
-
-</tr> 
-
-
-<tr> 
-<td>003</td> 
-<td></td> 
-<td></td> 
-<td></td> 
-
-</tr> 
-
-
-<tr> 
-<td>004</td> 
-<td></td> 
-<td></td> 
-<td></td> 
-
-</tr> 
-
-
-<tr> 
-<td>005</td> 
-<td></td> 
-<td></td> 
-<td></td> 
-
-</tr> 
- -->
-
+ <table border="1" width="100%"> 
+  <tr>
+    <th width="25%">Number</th> 
+    <th width="25%">Shrt_Desc</th> 
+    <th width="25%">GmWt_Desc1</th> 
+    <th width="25%">GmWt_Desc2</th> 
+  </tr>
+ <% rows.forEach(function(item){ %>
+  <tr>
+     <td><%= item.NDB_No %></td> 
+    <td><%= item.Shrt_Desc %></td> 
+    <td><%= item.GmWt_Desc1 %></td> 
+    <td><%= item.GmWt_Desc2 %></td> 
+  </tr>
+ <% }); %>
 </table>
 
-
-
-<!--
-<!DOCTYPE html>
-<html lang="en">
-<head><% include partials/page/head.ejs %></head>
-<body>
-<% include partials/page/header.ejs %>
-<% include partials/page/jsdefaults.ejs %>
-
-<div class="container">
-  <h1><%= pagetitle %> -- <%= title %></h1>
- 
-<?php
-
-$db = mysql_connect("localhost", "root");
-
-mysql_select_db("nutrition",$db);
-
-if ($submit) {
-
-  if ($id) {
-
-    $sql = "UPDATE nutrition SET NDB_NO='$NBD_No',Shrt_Desc='$Shrt_Desc',Water_(g)='$Water_(g)',Energy_Kcal='$Energy_Kcal' WHERE id=$id";
-
-  } else {
-
-    $sql = "INSERT INTO nutrition (number,Shrt_Desc,Water_(g),Energy_Kcal) VALUES ('$NBD_No','$Shrt_Desc','$Water_(g)','$Energy_Kcal')";
- 
- 
-  }
-
- 
-  // run SQL against the DB
-
- 
-  $result = mysql_query($sql);
-
-
-  echo "Record updated/edited!<p>";
-
- 
-} elseif ($delete) {
-
-   // delete a record
-
-    $sql = "DELETE FROM Nutritions WHERE id=$id";
-
-    $result = mysql_query($sql);
-
-    echo "$sql Record deleted!<p>";
-
-} else {
-
-  // this part happens if we don't press submit
-
-  if (!$id) {
-
-    // print the list if there is not editing
-    $result = mysql_query("SELECT * FROM nutriton",$db);
-
-    while ($myrow = mysql_fetch_array($result)) {
- 
-      printf("<a href="%s?id=%s">%s %s</a> n", $PHP_SELF, $myrow["id"], $myrow["NBD_No"], $myrow["last"]);
-
-     printf("<a href="%s?id=%s&delete=yes">(DELETE)</a><br>", $PHP_SELF, $myrow["id"]);
-
-    }
-
-  }
-
-  ?>
- 
-
-  <P>
-
-  <a href="<?php echo $PHP_SELF?>">ADD A RECORD</a>
-
-  <P>
-
-  <form method="post" action="<?php echo $PHP_SELF?>">
-
-  <?php
-
-  if ($id) {
-    // editing so select a record
-
-    $sql = "SELECT * FROM nutrition WHERE id=$id";
-
-    $result = mysql_query($sql);
-
-    $myrow = mysql_fetch_array($result);
-
-    $id = $myrow["id"];
-
-    $NBD_No = $myrow["NBD_No"];
-
-    $Shrt_Desc = $myrow["Shrt_Desc"];
-
-    $Water_(g) = $myrow["Water_(g)"];
-
-    $Energy_Kcal = $myrow["Energy_Kcal"];
-
- 
-
-    ?>
-
-    <input type=hidden name="id" value="<?php echo $id ?>">
-
-    <?php
-  }
-  ?>
-  NBD_No name:<input type="Text" name="NBD_No" value="<?php echo $NBD_No ?>"><br>
-
-  Shrt_Desc name:<input type="Text" name="Shrt_Desc" value="<?php echo $Shrt_Desc ?>"><br>
-
-  Water_(g):<input type="Text" name="Water_(g)" value="<?php echo $Water(g) ?>"><br>
-
-  Energy_Kcal:<input type="Text" name="Energy_Kcal" value="<?php echo $Energy_Kcal ?>"><br>
-
-  <input type="Submit" name="submit" value="Enter information">
-
-  </form>
-}
-?>
--->
-</body>
-
-</html>
