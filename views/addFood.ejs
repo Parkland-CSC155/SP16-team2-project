@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><% include partials/page/head.ejs %>
+
+<script src="js/onClick.js"></script>
+<script src="js/list.js"></script>
+<link rel="stylesheet" type="text/css" href="css/style.css">
+
+</head>
+
+<body>
+<% include partials/page/header.ejs %>
+
+  <h1><%= pagetitle %> -- <b><%= title %></b></h1>
+  <p><a href="/calculator">Back to cart</a></p>
+
+<form action="/calculator/form" method="post">
+  <label><%= search %></label>
+  <input type="text" name="searchDB"/>
+  <button type="submit">Search</button>
+  
+</form>
+ 
+    <form action="/calculator/submit">
+        <p align="left">
+            <select multiple size="20" style="width: 400px;">
+                <option value="test">test</option>
+            </select>
+                <button type="submit" value="Submit">Submit</button>
+                <button type="reset" onclick="alert('Resetting the cart')" value="Reset">Reset</button>
+        </p>
+    </form>
+
+
+  <% include partials/page/footer.ejs %>
+  <% include partials/page/jsdefaults.ejs %>
+</body>
+</html>

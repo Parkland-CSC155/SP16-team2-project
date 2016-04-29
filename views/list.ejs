@@ -19,7 +19,7 @@
     </div>
     <div>
       <ul class="nav navbar-nav">
-        <li class="active"><a href="#">Home</a></li>
+        <li class="active"><a href="home.ejs">Home</a></li>
         <li><a href="../../calc.ejs">Calc</a></li>
        
        
@@ -50,88 +50,21 @@
 </nav>
 <div class="col-lg-7">
   <h1>Nutrition Database</h1>
-  <!--
-  <form class="pull-right" id="form_id" method="post" name="myform">
-      <label>User Name :</label>
-      <input type="text" name="username" id="username"/>
-      <label>Password :</label>
-      <input type="password" name="password" id="password"/>
-      <input type="button" value="Login" id="submit" onclick="validate()"/>
-    </form>
-  <span><b class="note">Note : </b>Please use following username and password. <br/><b class="valid">User Name : getUserName<br/>Password : password#123</b></span>
-  -->
-  
-  <table border="1" width="100%"> 
-<tr>
-<th width="10%">Number</th> 
-<th width="10%">Shrt_Desc</th> 
-<th width="10%">Water_(g)</th> 
-<th width="10%">Engery_Kcal</th> 
-</tr>
-
-<tr> 
-<td>001</td> 
-<td></td> 
-<td></td> 
-<td></td> 
-
-</tr>
-
-
-<tr> 
-<td>002</td> 
-<td></td> 
-<td></td> 
-<td></td> 
-
-</tr> 
-
-
-<tr> 
-<td>003</td> 
-<td></td> 
-<td></td> 
-<td></td> 
-
-</tr> 
-
-
-<tr> 
-<td>004</td> 
-<td></td> 
-<td></td> 
-<td></td> 
-
-</tr> 
-
-
-<tr> 
-<td>005</td> 
-<td></td> 
-<td></td> 
-<td></td> 
-
-</tr> 
  
-
+ <table border="1" width="100%"> 
+  <tr>
+    <th width="25%">Number</th> 
+    <th width="25%">Shrt_Desc</th> 
+    <th width="25%">GmWt_Desc1</th> 
+    <th width="25%">GmWt_Desc2</th> 
+  </tr>
+ <% rows.forEach(function(item){ %>
+  <tr>
+     <td><%= item.NDB_No %></td> 
+    <td><%= item.Shrt_Desc %></td> 
+    <td><%= item.GmWt_Desc1 %></td> 
+    <td><%= item.GmWt_Desc2 %></td> 
+  </tr>
+ <% }); %>
 </table>
-</div>
-<div class="col-md-4">
-  <h2>Calculater Area</h2>
-  
-  <form action="js/onClick.js" method="get">
-    <input id="food" name="food" placeholder="Please enter food name" type="text">  
-    <!-- <input id="portion" name="portion" placeholder="Portion sizes" type="text"> 
-    add portion after a select button when the database populates
-    <input onclick="Submitted()" type="button" value="Search">
-    -->
-    <a href = "javascript: Submitted()">Search</a>
-</form>
-</div>
 
-
- 
-  </div>
-</div><!-- container -->
-</body>
-</html>
