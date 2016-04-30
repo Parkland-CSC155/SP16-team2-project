@@ -55,6 +55,7 @@ app.use(require('express-session')({
     resave: false, 
     saveUninitialized: false }));
 
+var sess;
 // Initialize Passport and restore authentication state, if any, from the
 // session.
 app.use(passport.initialize());
@@ -66,9 +67,32 @@ app.get('/home', routes.home);
 // validate all requests to the /api -based routes
 
 //calculator stuff
-app.get('/calculator', routes.calculator);
+app.get('/calculator', require('connect-ensure-login').ensureLoggedIn(), function(req, res){
+    sess = req.session;
+    
+    req.session.Ingredients = ['cat',
+    'dog',
+    'cow'
+    ];
+    req.session.calories = [3, 6, 19];    
+    res.render('calc', {
+       title: 'Calculator Page',
+       cart: req.session.Ingredients
+    });
+});
 
-app.get('/calculator/add', routes.add);
+app.get('/calculator/add', require('connect-ensure-login').ensureLoggedIn(), function(req, res){
+    sess = req.session;
+    
+    req.session.searchArray = ['yo', 'sup'];
+    res.render('addFood', {
+       title: 'Adding Ingredients',
+       search: 'Search the database for food',
+       searchArray: req.session.searchArray,
+       incart: "items in the cart",
+       cart: req.session.Ingredients
+    });
+});
 
 app.post("/calculator/form", function(req, res, next){
   var searchDB = req.body.searchDB;

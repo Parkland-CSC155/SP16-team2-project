@@ -11,9 +11,15 @@
   
   <p>
     <select multiple size="20" style="width: 400px;">
-      <option value="test">test</option>
+      <% for(var i = 0; i < cart.length; i++) { %>
+        <option value="test"><%= cart[i] %></option>
+      <% } %>
     </select>
+    Calculate the calories in your cart
+    <button type="submit" value="calcbutton">Calculate</button>
   </p>
+  
+  
 
 
   <% include partials/page/footer.ejs %>

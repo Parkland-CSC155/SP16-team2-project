@@ -23,16 +23,16 @@ exports.home = function(req, res){
     res.render("index", {});    
 };
 
-exports.calculator = function(req, res){
-    res.render('calc', {
-       title: 'Calculator Page'
-    });
-};
+// exports.calculator = function(req, res){
+//     res.render('calc', {
+//        title: 'Calculator Page'
+//     });
+// };
 
-exports.add = function(req, res){
-    res.render('addFood', {
-       title: 'Adding Ingredients',
-       search: 'Search the database for food'
-    });
-};
+// exports.add = function(req, res){
+//     res.render('addFood', {
+//        title: 'Adding Ingredients',
+//        search: 'Search the database for food'
+//     });
+// };
 
