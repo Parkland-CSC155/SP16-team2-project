@@ -56,6 +56,7 @@ app.use(require('express-session')({
     saveUninitialized: false }));
 
 var sess;
+
 // Initialize Passport and restore authentication state, if any, from the
 // session.
 app.use(passport.initialize());
@@ -69,9 +70,10 @@ app.get('/home', routes.home);
 //calculator stuff
 app.get('/calculator', require('connect-ensure-login').ensureLoggedIn(), function(req, res){
     sess = req.session;
-    
     sess.Ingredients = [];
-    sess.calories = [3, 6, 19];    
+    sess.calories = [3, 6, 19];
+    console.log(sess);
+    
     res.render('calc', {
        title: 'Calculator Page',
        cart: sess.Ingredients
@@ -80,8 +82,8 @@ app.get('/calculator', require('connect-ensure-login').ensureLoggedIn(), functio
 
 app.get('/calculator/add', require('connect-ensure-login').ensureLoggedIn(), function(req, res){
     sess = req.session;
+    sess.searchArray = ["yo"];
     
-    req.session.searchArray = ['yo', 'sup', 'hello how are you?'];
     res.render('addFood', {
        title: 'Adding Ingredients',
        search: 'Search the database for food',
@@ -93,17 +95,33 @@ app.get('/calculator/add', require('connect-ensure-login').ensureLoggedIn(), fun
 
 app.post("/calculator/food", function(req, res, next){
   var food = req.body.food
-  console.log(food);
   sess = req.session;
-  sess.Ingredients.push(food);
-  console.log(sess.Ingredients);
+  
+  if (!food == '')
+  {
+    sess.Ingredients.push(food);
+    console.log(sess.Ingredients);
+  }
   
   res.redirect("/calculator/add");
 });
-
+//working on updating the db with this
 app.post("/calculator/form", function(req, res, next){
+  sess = req.session;
   var searchDB = req.body.searchDB;
-  console.log(searchDB);
+  var amount = req.body.amount;
+  var calcsql = "SELECT * from NutritionData WHERE  Shrt_Desc like '" + searchDB + "%'";
+  
+  db.all(calcsql, function(nutriErr, nutriRows){ 
+            nutriRows.forEach(function (nutriRows) {  
+            console.log(nutriRows.Shrt_Desc);
+            var a = nutriRows.Shrt_Desc;
+            sess.searchArray.push(a);
+            // console.log(amount)
+        })
+    });
+  
+
   
   res.redirect("/calculator/add");
 });
