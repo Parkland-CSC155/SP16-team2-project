@@ -23,9 +23,9 @@
  
 <form action="/calculator/food" method="post">
   <p align="left">
-    <select name="food">
+  <select multiple size="20" name="food" style="width: 400px;">
       <% for(var i = 0; i < searchArray.length; i++) { %>
-        <option value="test"><%= searchArray[i] %></option>
+        <option value="<%= searchArray[i] %>"><%= searchArray[i] %></option>
       <% } %>
     </select>
     <button type="submit">Add</button>

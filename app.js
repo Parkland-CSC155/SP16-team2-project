@@ -70,11 +70,8 @@ app.get('/home', routes.home);
 app.get('/calculator', require('connect-ensure-login').ensureLoggedIn(), function(req, res){
     sess = req.session;
     
-    req.session.Ingredients = ['cat',
-    'dog',
-    'cow'
-    ];
-    req.session.calories = [3, 6, 19];    
+    sess.Ingredients = [];
+    sess.calories = [3, 6, 19];    
     res.render('calc', {
        title: 'Calculator Page',
        cart: sess.Ingredients
@@ -95,9 +92,10 @@ app.get('/calculator/add', require('connect-ensure-login').ensureLoggedIn(), fun
 });
 
 app.post("/calculator/food", function(req, res, next){
-  var test = req.body.test
+  var food = req.body.food
+  console.log(food);
   sess = req.session;
-  sess.Ingredients.push(test);
+  sess.Ingredients.push(food);
   console.log(sess.Ingredients);
   
   res.redirect("/calculator/add");
