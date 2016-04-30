@@ -55,7 +55,7 @@ app.use(require('express-session')({
     resave: false, 
     saveUninitialized: false }));
 
-var sess;
+var pageScope;
 
 // Initialize Passport and restore authentication state, if any, from the
 // session.
@@ -69,62 +69,66 @@ app.get('/home', routes.home);
 
 //calculator stuff
 app.get('/calculator', require('connect-ensure-login').ensureLoggedIn(), function(req, res){
-    sess = req.session;
-    sess.Ingredients = [];
-    sess.calories = [3, 6, 19];
-    console.log(sess);
+    
+    req.session.searchArray = [];
+    req.session.Ingredients = [];
+    req.session.calories = [3, 6, 19];
     
     res.render('calc', {
-       title: 'Calculator Page',
-       cart: sess.Ingredients
+       title: 'Calculator Page'
     });
 });
 
 app.get('/calculator/add', require('connect-ensure-login').ensureLoggedIn(), function(req, res){
-    sess = req.session;
-    sess.searchArray = ["yo"];
-    
+      
     res.render('addFood', {
        title: 'Adding Ingredients',
        search: 'Search the database for food',
-       searchArray: sess.searchArray,
+       searchArray: req.session.searchArray,
        incart: "items in the cart",
-       cart: sess.Ingredients
+       cart: req.session.Ingredients
     });
 });
 
 app.post("/calculator/food", function(req, res, next){
   var food = req.body.food
-  sess = req.session;
+  
   
   if (!food == '')
   {
-    sess.Ingredients.push(food);
-    console.log(sess.Ingredients);
+    req.session.Ingredients.push(food);
   }
   
   res.redirect("/calculator/add");
 });
+
 //working on updating the db with this
 app.post("/calculator/form", function(req, res, next){
-  sess = req.session;
+  
   var searchDB = req.body.searchDB;
   var amount = req.body.amount;
   var calcsql = "SELECT * from NutritionData WHERE  Shrt_Desc like '" + searchDB + "%'";
-  
-  db.all(calcsql, function(nutriErr, nutriRows){ 
+  // if (!searchDB == '')
+  // {
+    
+  // }
+  db.all(calcsql, function(nutriErr, nutriRows){
+            var data=[];
             nutriRows.forEach(function (nutriRows) {  
-            console.log(nutriRows.Shrt_Desc);
-            var a = nutriRows.Shrt_Desc;
-            sess.searchArray.push(a);
-            // console.log(amount)
+              var a = nutriRows.Shrt_Desc;
+              data.push(a);
+              
+              // console.log(searchitems);
         })
-    });
-  
-
-  
-  res.redirect("/calculator/add");
-});
+        req.session.searchArray = data.slice();
+        console.log(req.session.searchArray);
+        
+        req.session.save( function(err) {
+            req.session.reload( function (err) {
+              res.redirect("/calculator/add"); });
+          });
+      });
+  });
 
 app.get("/session-example", function(req, res, next){
 
