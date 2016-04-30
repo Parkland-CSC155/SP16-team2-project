@@ -21,24 +21,24 @@
   
 </form>
  
-    <form action="/calculator/submit">
-        <p align="left">
-            <select multiple size="20" style="width: 400px;">
-                <% for(var i = 0; i < searchArray.length; i++) { %>
-                    <option value="test"><%= searchArray[i] %></option>
-                <% } %>
-            </select>
-                <button type="submit" value="Submit">Add</button>
-                <button type="reset" onclick="alert('Resetting the cart')" value="Reset">Reset</button>
-        </p>
-    </form>
-    <h1><%= incart %></h1>
-    <p>
-    <select multiple size="20" style="width: 400px;">
-      <% for(var i = 0; i < cart.length; i++) { %>
-        <option value="test"><%= cart[i] %></option>
+<form action="/calculator/food" method="post">
+  <p align="left">
+  <select multiple size="20" name="food" style="width: 400px;">
+      <% for(var i = 0; i < searchArray.length; i++) { %>
+        <option value="<%= searchArray[i] %>"><%= searchArray[i] %></option>
       <% } %>
     </select>
+    <button type="submit">Add</button>
+  </p>
+</form>
+    
+    <h1><%= incart %></h1>
+    <p>
+      <select multiple size="20" style="width: 400px;">
+        <% for(var i = 0; i < cart.length; i++) { %>
+          <option value="test"><%= cart[i] %></option>
+        <% } %>
+      </select>
     </p>
 
 
