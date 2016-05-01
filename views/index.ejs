@@ -19,8 +19,8 @@
     </div>
     <div>
       <ul class="nav navbar-nav">
-        <li class="active"><a href="#">Home</a></li>
-        <li><a href="/calculator">Calc</a></li>
+        <li class="active"><a href="home.ejs">Home</a></li>
+        <li><a href="../../calc.ejs">Calc</a></li>
        
        
       </ul>
@@ -50,65 +50,17 @@
 </nav>
 <div class="col-lg-7">
   <h1>Nutrition Database</h1>
-
-  <table border="1" width="100%"> 
-<tr>
-<th width="10%">Number</th> 
-<th width="10%">Shrt_Desc</th> 
-<th width="10%">Water_(g)</th> 
-<th width="10%">Engery_Kcal</th> 
-</tr>
-
-<tr> 
-<td>001</td> 
-<td></td> 
-<td></td> 
-<td></td> 
-
-</tr>
-
-
-<tr> 
-<td>002</td> 
-<td></td> 
-<td></td> 
-<td></td> 
-
-</tr> 
-
-
-<tr> 
-<td>003</td> 
-<td></td> 
-<td></td> 
-<td></td> 
-
-</tr> 
-
-
-<tr> 
-<td>004</td> 
-<td></td> 
-<td></td> 
-<td></td> 
-
-</tr> 
-
-
-<tr> 
-<td>005</td> 
-<td></td> 
-<td></td> 
-<td></td> 
-
-</tr> 
- 
-
-</table>
-</div>
-
- 
+  <div>
+    <p>
+      <a href="/api/list">List of Items</p>
   </div>
-</div><!-- container -->
+</div>
+<!--
+   <form action="routes/api.js" method="get">
+      Please enter ApiKey:
+      <input id="apikey" type="text" name="apikey"><br>
+      <input type="button" value="Enter" onClick="getApiKey()">
+  </form>
+-->
 </body>
 </html>

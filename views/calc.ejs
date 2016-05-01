@@ -7,20 +7,8 @@
 <% include partials/page/header.ejs %>
 
   <h1><%= pagetitle %> -- <b><%= title %></b></h1>  
-  <p><a href="/calculator/add">Add ingredient to list</a></p>
-  
-  <p>
-    <select multiple size="20" style="width: 400px;">
-      <% for(var i = 0; i < cart.length; i++) { %>
-        <option value="test"><%= cart[i] %></option>
-      <% } %>
-    </select>
-    Calculate the calories in your cart
-    <button type="submit" value="calcbutton">Calculate</button>
-  </p>
-  
-  
-
+  <p><a href="/calculator/add"><b>Add ingredient to list</b></a></p>
+ 
 
   <% include partials/page/footer.ejs %>
   <% include partials/page/jsdefaults.ejs %>

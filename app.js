@@ -55,7 +55,8 @@ app.use(require('express-session')({
     resave: false, 
     saveUninitialized: false }));
 
-var sess;
+var pageScope;
+
 // Initialize Passport and restore authentication state, if any, from the
 // session.
 app.use(passport.initialize());
@@ -68,45 +69,69 @@ app.get('/home', routes.home);
 
 //calculator stuff
 app.get('/calculator', require('connect-ensure-login').ensureLoggedIn(), function(req, res){
-    sess = req.session;
     
-    sess.Ingredients = [];
-    sess.calories = [3, 6, 19];    
+    req.session.searchArray = [];
+    req.session.Ingredients = [];
+    // req.sesssion.servings = [];
+    // req.session.calories = [];
+    // req.sesssion.protien = [];
+    // req.sesssion.sugar = [];
+    // req.sesssion.carbs = [];
+    
     res.render('calc', {
-       title: 'Calculator Page',
-       cart: sess.Ingredients
+       title: 'Calculator Page'
     });
 });
 
 app.get('/calculator/add', require('connect-ensure-login').ensureLoggedIn(), function(req, res){
-    sess = req.session;
-    
-    req.session.searchArray = ['yo', 'sup', 'hello how are you?'];
+      
     res.render('addFood', {
        title: 'Adding Ingredients',
        search: 'Search the database for food',
-       searchArray: sess.searchArray,
+       searchArray: req.session.searchArray,
        incart: "items in the cart",
-       cart: sess.Ingredients
+       cart: req.session.Ingredients
     });
 });
 
 app.post("/calculator/food", function(req, res, next){
   var food = req.body.food
-  console.log(food);
-  sess = req.session;
-  sess.Ingredients.push(food);
-  console.log(sess.Ingredients);
   
-  res.redirect("/calculator/add");
-});
+  
+  if (!food == '')
+  {
+    req.session.Ingredients.push(food);
+  }
+  
+  req.session.save( function(err) {
+            req.session.reload( function (err) {
+              res.redirect("/calculator/add"); });
+          });
+  });
 
+//working on updating the db with this
 app.post("/calculator/form", function(req, res, next){
-  var searchDB = req.body.searchDB;
-  console.log(searchDB);
   
-  res.redirect("/calculator/add");
-});
+  var searchDB = req.body.searchDB;
+  var amount = req.body.amount;
+  var calcsql = "SELECT * from NutritionData WHERE  Shrt_Desc like '" + searchDB + "%'";
+  
+  db.all(calcsql, function(nutriErr, nutriRows){
+            var data=[];
+            nutriRows.forEach(function (nutriRows) {  
+              var a = nutriRows.Shrt_Desc;
+              data.push(a);
+              
+              // console.log(searchitems);
+        })
+        req.session.searchArray = data.slice();
+        
+        req.session.save( function(err) {
+            req.session.reload( function (err) {
+              res.redirect("/calculator/add"); });
+          });
+      });
+  });
 
 app.get("/session-example", function(req, res, next){
 

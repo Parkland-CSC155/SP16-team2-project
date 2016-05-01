@@ -28,6 +28,14 @@
         <option value="<%= searchArray[i] %>"><%= searchArray[i] %></option>
       <% } %>
     </select>
+    Number of servings
+    <select name="amount">quantity
+      <option>1</option>
+      <option>2</option>
+      <option>3</option>
+      <option>4</option>
+      <option>5</option>
+    </select>
     <button type="submit">Add</button>
   </p>
 </form>
@@ -39,6 +47,8 @@
           <option value="test"><%= cart[i] %></option>
         <% } %>
       </select>
+      Calculate the calories in your cart
+      <button type="submit" value="calcbutton">Calculate</button>
     </p>
 
 
