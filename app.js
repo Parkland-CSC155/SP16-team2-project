@@ -69,15 +69,14 @@ app.get('/home', routes.home);
 
 //calculator stuff
 app.get('/calculator', require('connect-ensure-login').ensureLoggedIn(), function(req, res){
-    
     req.session.searchArray = [];
     req.session.Ingredients = [];
-    // req.sesssion.servings = [];
-    // req.session.calories = [];
-    // req.sesssion.protien = [];
-    // req.sesssion.sugar = [];
-    // req.sesssion.carbs = [];
-    
+    req.session.servings = [];
+    req.session.cal = ["hello"];
+    req.sesssion.pro = ["hello"];
+    req.sesssion.sugar = ["hello"];
+    req.sesssion.carbs = ["hello"];
+    console.log(req.session.cal);
     res.render('calc', {
        title: 'Calculator Page'
     });
@@ -90,17 +89,23 @@ app.get('/calculator/add', require('connect-ensure-login').ensureLoggedIn(), fun
        search: 'Search the database for food',
        searchArray: req.session.searchArray,
        incart: "items in the cart",
-       cart: req.session.Ingredients
+       cart: req.session.Ingredients,
+       serving: req.session.servings,
+       calories: req.session.cal,
+       protein: req.sesssion.pro,
+       sugar: req.sesssion.sugar,
+       carbs: req.sesssion.carbs       
     });
 });
 
 app.post("/calculator/food", function(req, res, next){
-  var food = req.body.food
-  
-  
+  var food = req.body.food;
+  var amount = req.body.amount;
+    
   if (!food == '')
   {
     req.session.Ingredients.push(food);
+    req.session.servings.push(amount);
   }
   
   req.session.save( function(err) {
@@ -113,23 +118,63 @@ app.post("/calculator/food", function(req, res, next){
 app.post("/calculator/form", function(req, res, next){
   
   var searchDB = req.body.searchDB;
-  var amount = req.body.amount;
   var calcsql = "SELECT * from NutritionData WHERE  Shrt_Desc like '" + searchDB + "%'";
-  
+      
   db.all(calcsql, function(nutriErr, nutriRows){
             var data=[];
             nutriRows.forEach(function (nutriRows) {  
               var a = nutriRows.Shrt_Desc;
               data.push(a);
-              
-              // console.log(searchitems);
         })
         req.session.searchArray = data.slice();
+        
+        //calories
+        db.all(calcsql, function(nutriErr, nutriRows){
+            var data1=[];
+            nutriRows.forEach(function (nutriRows) {  
+              var a1 = nutriRows.Energ_Kcal;
+              data1.push(a1);
+          })
+          req.session.cal = data1.slice();
+          //protein
+        db.all(calcsql, function(nutriErr, nutriRows){
+            var data2=[];
+            nutriRows.forEach(function (nutriRows) {  
+              var a2 = nutriRows.Protein_(g);
+              data2.push(a2);
+        })
+        req.session.pro = data2.slice();
+          //Carbohydrt
+            db.all(calcsql, function(nutriErr, nutriRows){
+            var data3=[];
+            nutriRows.forEach(function (nutriRows) {  
+              var a3 = nutriRows.Carbohydrt_(g);
+              data3.push(a3);
+            })
+            req.session.carbs = data3.slice();
+            //sugar
+        db.all(calcsql, function(nutriErr, nutriRows){
+            var data4=[];
+            nutriRows.forEach(function (nutriRows) {  
+              var a4 = nutriRows.Sugar_Tot_(g);
+              data4.push(a4);
+        })
+        req.session.sugar = data4.slice();
+            
+              });
+            });
+          });
+        });
+    
+        
+        
         
         req.session.save( function(err) {
             req.session.reload( function (err) {
               res.redirect("/calculator/add"); });
-          });
+         
+   
+         });
       });
   });
 

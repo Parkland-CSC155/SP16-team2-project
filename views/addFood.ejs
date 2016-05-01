@@ -12,7 +12,7 @@
 <% include partials/page/header.ejs %>
 
   <h1><%= pagetitle %> -- <b><%= title %></b></h1>
-  <p><a href="/calculator">Back to cart</a></p>
+  <p><a href="/calculator">Back</a></p>
 
 <form action="/calculator/form" method="post">
   <label><%= search %></label>
@@ -40,16 +40,28 @@
   </p>
 </form>
     
-    <h1><%= incart %></h1>
-    <p>
-      <select multiple size="20" style="width: 400px;">
-        <% for(var i = 0; i < cart.length; i++) { %>
-          <option value="test"><%= cart[i] %></option>
-        <% } %>
-      </select>
-      Calculate the calories in your cart
-      <button type="submit" value="calcbutton">Calculate</button>
-    </p>
+    <h1><%= incart %></h1>    
+    
+    <table border="1" >
+      <tr>
+        <th>Food</th><th>Serving Size</th><th>Calories</th><th>Sugar</th><th>Carbs</th><th>Protein</th>
+      </tr>
+    <% for (var i = 0; i < cart.length; i++) { %>
+      <tr>
+        <td><%= cart[i] %></td>
+        <td><%= serving[i] %></td>
+        <td>calories[i]</td>
+        <td>sugar[i]</td>
+        <td>carbs[i]</td>
+        <td>protein[i]</td>
+      </tr>    
+    <% } %>
+    </table>
+    
+    
+    
+    
+    
 
 
   <% include partials/page/footer.ejs %>
