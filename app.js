@@ -72,10 +72,13 @@ app.get('/calculator', require('connect-ensure-login').ensureLoggedIn(), functio
     req.session.searchArray = [];
     req.session.Ingredients = [];
     req.session.servings = [];
-    req.session.cal = ["hello"];
-    req.sesssion.pro = ["hello"];
-    req.sesssion.sugar = ["hello"];
-    req.sesssion.carbs = ["hello"];
+    
+    //working on these
+    // req.session.cal = ["hello"];
+    // req.sesssion.pro = ["hello"];
+    // req.sesssion.sugar = ["hello"];
+    // req.sesssion.carbs = ["hello"];
+    
     console.log(req.session.cal);
     res.render('calc', {
        title: 'Calculator Page'
@@ -91,10 +94,19 @@ app.get('/calculator/add', require('connect-ensure-login').ensureLoggedIn(), fun
        incart: "items in the cart",
        cart: req.session.Ingredients,
        serving: req.session.servings,
-       calories: req.session.cal,
-       protein: req.sesssion.pro,
-       sugar: req.sesssion.sugar,
-       carbs: req.sesssion.carbs       
+       
+       //working on these
+      //  calories: req.session.cal,
+      //  protein: req.sesssion.pro,
+      //  sugar: req.sesssion.sugar,
+      //  carbs: req.sesssion.carbs
+      
+      //for the ejs file
+        // <td><%= //calories[i] %></td>
+        // <td><%= //sugar[i] %></td>
+        // <td><%= //carbs[i] %></td>
+        // <td><%= //protein[i] %></td>
+              
     });
 });
 
@@ -128,44 +140,47 @@ app.post("/calculator/form", function(req, res, next){
         })
         req.session.searchArray = data.slice();
         
+        
+        //working on these
         //calories
-        db.all(calcsql, function(nutriErr, nutriRows){
-            var data1=[];
-            nutriRows.forEach(function (nutriRows) {  
-              var a1 = nutriRows.Energ_Kcal;
-              data1.push(a1);
-          })
-          req.session.cal = data1.slice();
-          //protein
-        db.all(calcsql, function(nutriErr, nutriRows){
-            var data2=[];
-            nutriRows.forEach(function (nutriRows) {  
-              var a2 = nutriRows.Protein_(g);
-              data2.push(a2);
-        })
-        req.session.pro = data2.slice();
-          //Carbohydrt
-            db.all(calcsql, function(nutriErr, nutriRows){
-            var data3=[];
-            nutriRows.forEach(function (nutriRows) {  
-              var a3 = nutriRows.Carbohydrt_(g);
-              data3.push(a3);
-            })
-            req.session.carbs = data3.slice();
-            //sugar
-        db.all(calcsql, function(nutriErr, nutriRows){
-            var data4=[];
-            nutriRows.forEach(function (nutriRows) {  
-              var a4 = nutriRows.Sugar_Tot_(g);
-              data4.push(a4);
-        })
-        req.session.sugar = data4.slice();
+        // db.all(calcsql, function(nutriErr, nutriRows){
+        //     var data1=[];
+        //     nutriRows.forEach(function (nutriRows) {  
+        //       var a1 = nutriRows.Energ_Kcal;
+        //       data1.push(a1);
+        //   })
+        //   req.session.cal = data1.slice();
+        //   //protein
+        // db.all(calcsql, function(nutriErr, nutriRows){
+        //     var data2=[];
+        //     nutriRows.forEach(function (nutriRows) {  
+        //       var a2 = nutriRows.Protein_(g);
+        //       data2.push(a2);
+        // })
+        // req.session.pro = data2.slice();
+        //   //Carbohydrt
+        //     db.all(calcsql, function(nutriErr, nutriRows){
+        //     var data3=[];
+        //     nutriRows.forEach(function (nutriRows) {  
+        //       var a3 = nutriRows.Carbohydrt_(g);
+        //       data3.push(a3);
+        //     })
+        //     req.session.carbs = data3.slice();
+        //     //sugar
+        // db.all(calcsql, function(nutriErr, nutriRows){
+        //     var data4=[];
+        //     nutriRows.forEach(function (nutriRows) {  
+        //       var a4 = nutriRows.Sugar_Tot_(g);
+        //       data4.push(a4);
+        // })
+        // req.session.sugar = data4.slice();
             
-              });
-            });
-          });
-        });
+        //       });
+        //     });
+        //   });
+        // });
     
+        
         
         
         
