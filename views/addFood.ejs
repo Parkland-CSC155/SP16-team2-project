@@ -44,13 +44,16 @@
     
     <table border="1" >
       <tr>
-        <th>Food</th><th>Serving Size</th><th>Calories</th><th>Sugar</th><th>Carbs</th><th>Protein</th>
+        <th>Food</th><th>Serving Size</th><th>Calories</th><th>Sugar</th><th>Protein</th><th>Carbs</th>   
       </tr>
     <% for (var i = 0; i < cart.length; i++) { %>
       <tr>
         <td><%= cart[i] %></td>
         <td><%= serving[i] %></td>
-        
+        <td><%= calories[i] %></td>
+        <td><%= sugar[i] %></td>
+        <td><%= protein[i] %></td>
+        <td><%= carbs[i] %></td>
         
       </tr>    
     <% } %>
