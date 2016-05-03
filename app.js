@@ -55,6 +55,8 @@ app.use(require('express-session')({
     resave: false, 
     saveUninitialized: false }));
 
+var pageScope;
+
 // Initialize Passport and restore authentication state, if any, from the
 // session.
 app.use(passport.initialize());
@@ -66,16 +68,137 @@ app.get('/home', routes.home);
 // validate all requests to the /api -based routes
 
 //calculator stuff
-app.get('/calculator', routes.calculator);
-
-app.get('/calculator/add', routes.add);
-
-app.post("/calculator/form", function(req, res, next){
-  var searchDB = req.body.searchDB;
-  console.log(searchDB);
-  
-  res.redirect("/calculator/add");
+app.get('/calculator', require('connect-ensure-login').ensureLoggedIn(), function(req, res){
+    req.session.searchArray = [];
+    req.session.Ingredients = [];
+    req.session.servings = [];
+    
+    //working on these
+    req.session.cal = [];
+    req.session.pro = [];
+    req.session.sugar = [];
+    req.session.carbs = [];
+    
+    console.log(req.session.cal);
+    res.render('calc', {
+       title: 'Calculator Page'
+    });
 });
+
+app.get('/calculator/add', require('connect-ensure-login').ensureLoggedIn(), function(req, res){
+      
+    res.render('addFood', {
+       title: 'Adding Ingredients',
+       search: 'Search the database for food',
+       searchArray: req.session.searchArray,
+       incart: "items in the cart",
+       cart: req.session.Ingredients,
+       serving: req.session.servings,
+       
+       //working on these
+       calories: req.session.cal,
+       protein: req.session.pro,
+       sugar: req.session.sugar,
+       carbs: req.session.carbs
+      
+      //for the ejs file
+        // <td><%= //calories[i] %></td>
+        // <td><%= //sugar[i] %></td>
+        // <td><%= //carbs[i] %></td>
+        // <td><%= //protein[i] %></td>
+          
+    });
+});
+
+app.post("/calculator/food", function(req, res, next){
+  var food = req.body.food;
+  var amount = req.body.amount;
+  var cal = req.body.calories;
+    
+  if (!food == '')
+  {
+    req.session.Ingredients.push(food);
+    req.session.servings.push(amount);
+    req.session.cal.push(cal);
+  }
+  
+  req.session.save( function(err) {
+            req.session.reload( function (err) {
+              res.redirect("/calculator/add"); });
+          });
+  });
+
+//working on updating the db with this
+app.post("/calculator/form", function(req, res, next){
+  
+  var searchDB = req.body.searchDB;
+  var calcsql = "SELECT * from NutritionData WHERE  Shrt_Desc like '" + searchDB + "%'";
+      
+  db.all(calcsql, function(nutriErr, nutriRows){
+            var data=[];
+            nutriRows.forEach(function (nutriRows) {  
+              var a = nutriRows.Shrt_Desc;
+              data.push(a);
+        })
+        req.session.searchArray = data.slice();
+        
+        
+        //working on these
+        //calories
+        db.all(calcsql, function(nutriErr, nutriRows){
+            var data1=[];
+            nutriRows.forEach(function (nutriRows) {  
+              var a1 = nutriRows.Energ_Kcal;
+              data1.push(a1);
+              console.log(nutriRows);
+          })
+          req.session.cal = data1.slice();
+          
+          //protein
+        db.all(calcsql, function(nutriErr, nutriRows){
+            var data2=[];
+            nutriRows.forEach(function (nutriRows) {  
+              var a2 = nutriRows.Protein_(g);
+              data2.push(a2);
+        })
+        req.session.pro = data2.slice();
+          //Carbohydrt
+            db.all(calcsql, function(nutriErr, nutriRows){
+            var data3=[];
+            nutriRows.forEach(function (nutriRows) {  
+              var a3 = nutriRows.Carbohydrt_(g);
+              data3.push(a3);
+            })
+            req.session.carbs = data3.slice();
+            //sugar
+        db.all(calcsql, function(nutriErr, nutriRows){
+            var data4=[];
+            nutriRows.forEach(function (nutriRows) {  
+              var a4 = nutriRows.Sugar_Tot_(g);
+              data4.push(a4);
+              
+        })
+        req.session.sugar = data4.slice();
+        console.log(req.session);
+        
+            
+              });
+            });
+          });
+        });
+    
+        
+        
+        
+        
+        req.session.save( function(err) {
+            req.session.reload( function (err) {
+              res.redirect("/calculator/add"); });
+         
+   
+         });
+      });
+  });
 
 app.get("/session-example", function(req, res, next){
 

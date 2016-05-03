@@ -44,7 +44,18 @@ exports.add = function (req, res) {
         search: 'Search the database for food'
     });
 };
+// exports.calculator = function(req, res){
+//     res.render('calc', {
+//        title: 'Calculator Page'
+//     });
+// };
 
+// exports.add = function(req, res){
+//     res.render('addFood', {
+//        title: 'Adding Ingredients',
+//        search: 'Search the database for food'
+//     });
+// };
 function prev() {
     console.log("inside prev");
     var pgNum = req.query.page;
