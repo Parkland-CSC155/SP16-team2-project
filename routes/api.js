@@ -1,91 +1,93 @@
 var express = require("express");
 var router = express.Router();
-var app = express();          
+var app = express();
 const APIKEY = 'abcd'; // some unique value that attackers cannot guess
-var sqlite3 = require('sqlite3').verbose();  
-var db = new sqlite3.Database('./datasets/nutrition.db'); 
+var sqlite3 = require('sqlite3').verbose();
+var db = new sqlite3.Database('./datasets/nutrition.db');
+//var db = new sqlite3.Database('.sqlnutrition.database.windows.net/nutritondb.db'); 
+var routes = require('../routes');
+/*
+function getApiKey(){
+    var reqApiKey = document.getElementById("apikey").value;
+}
+*/
 
-router.use(function(req, res, next){
-    if(req.baseUrl !== "/api"){
+router.use(function (req, res, next) {
+    if (req.baseUrl !== "/api") {
         res.send("no api");
         next();
         return;
     }
-    
+
     // REQUEST: www.blah.com/api?apiKey=abcd
     var reqApiKey = req.query.apiKey;
-    
-    if(!reqApiKey){
+
+    if (!reqApiKey) {
         res.status(401);
         res.send("Missing API Key");
-        return;   
-    } 
-    
-    if(reqApiKey !== APIKEY){
+        return;
+    }
+
+    if (reqApiKey !== APIKEY) {
         res.status(401);
         res.send("Invalid API Key");
-        return; 
+        return;
     }
-    console.log("api key entered is " + reqApiKey);   
+    console.log("api key entered is " + reqApiKey);
     // all good at this point, so let the request move on through the pipeline
     next();
 });
 
 // `/api/search/{searchText}?page={pageNumber}&apiKey={apiKey}` 
-router.get("/search/:text", function(req, res){
-    var searchText = req.params.text;    
-    var pgNum = req.query.page || 1;  
-    console.log("page num is " + pgNum); 
-    pgNum = Number(pgNum);  
-    if(searchText){     
+router.get("/search/:text", function (req, res) {
+    var searchText = req.params.text;
+    var pgNum = req.query.page || 1;
+    console.log("page num is " + pgNum);
+    pgNum = Number(pgNum);
+    if (searchText) {
         var start = 25 * (pgNum - 1);
-        var nutriSql = "SELECT shrt_Desc from NutritionData WHERE Shrt_Desc like '" + searchText +
-                        "%' order by Shrt_Desc limit 25 offset " + start;     
-        db.all(nutriSql, function(nutriErr, nutriRows){ 
-            if(nutriErr) 
-                console.error(nutriErr); 
-                
-            res.send(nutriRows);                             
-            console.log(nutriRows); 
-        }); 
-    } 
+        var nutriSql = "SELECT NDB_No, Shrt_Desc, GmWt_Desc1, GmWt_Desc2 from NutritionData WHERE Shrt_Desc like '" + searchText +
+                       "%' order by Shrt_Desc limit 25 offset " + start;
+        db.all(nutriSql, function (nutriErr, nutriRows) {
+            if (nutriErr)
+                console.error(nutriErr);
+
+            res.json(nutriRows);
+        });
+    }
 });
 
 //- `/api/list?page={pageNumber}&apiKey={apiKey}`
-router.get("/list", function(req, res){
-    var pgNum = req.query.page || 1;
-    console.log("page num is " + pgNum); 
-    pgNum = Number(pgNum);
+router.get("/list", function (req, res) {
+
+    var pgNum = req.query.page;
     var start = 25 * (pgNum - 1);
+    /*console.log("page num is " + pgNum); 
+    var num = req._parsedUrl.search;
+    console.log("location.search is " + num);*/
     //SELECT * from NutritionData WHERE  Shrt_Desc like 'a%' order by NDB_No offset 25 rows fetch next 5 rows only
     //sql server --> var sqlString = "SELECT [Fiber_TD_(g)], [Cholestrl_(mg)] from NutritionData order by NDB_No offset " + start + " rows fetch next 25 rows only";
     //for sqlite
-    var sqlString = "SELECT NDB_No, Shrt_Desc, GmWt_Desc1, GmWt_Desc2 from NutritionData order by Shrt_Desc limit 25 offset " + start; 
- 
-    db.all(sqlString, function(nutriErr, nutriRows){ 
-        if(nutriErr) 
-            console.error(nutriErr); 
-            
-        //res.send(nutriRows);
-        
-        res.render('list', {
-            rows: nutriRows
-        });                   
-        console.log(nutriRows);
-    });    
+    var sqlString = "SELECT NDB_No, Shrt_Desc, GmWt_Desc1, GmWt_Desc2 from NutritionData order by Shrt_Desc limit 25 offset " + start;
+
+    db.all(sqlString, function (nutriErr, nutriRows) {
+        if (nutriErr)
+            console.error(nutriErr);
+
+        res.json(nutriRows);
+    });
 });
 
 //- `/api/{id}&apiKey={apiKey}` 
-router.get("/details/:id", function(req, res){
+router.get("/details/:id", function (req, res) {
     var id = req.params.id;
     console.log("id is " + id);
-    var sqlStr = "SELECT * from NutritionData WHERE NDB_No = '" + id + "'";
-    db.get(sqlStr, function(nutriErr, nutriRows){ 
-            if(nutriErr) 
-                console.error(nutriErr);
-                     
-            res.send(nutriRows);              
-            console.log(nutriRows); 
-    }); 
+    var sqlStr = "SELECT NDB_No, Shrt_Desc, GmWt_Desc1, GmWt_Desc2 from NutritionData WHERE NDB_No = '" + id + "'";
+    db.get(sqlStr, function (nutriErr, nutriRows) {
+        if (nutriErr)
+            console.error(nutriErr);
+
+        res.json(nutriRows);
+    });
 });
 module.exports = router;

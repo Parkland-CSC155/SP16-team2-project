@@ -5,11 +5,10 @@
   <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
   <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
-<script src="js/login.js"></script>
-<script src="js/onClick.js"></script>
-<script src="app.js"></script>
-<script src="routes/api.js"></script>
-<script src="routes/index.js"></script>
+  <script src="../public/js/onClick.js"></script>
+  <script src="../app.js"></script>
+  <script src="../routes/api.js"></script>
+  <script src="../routes/index.js"></script>
 </head>
 <body>
   <nav class="navbar navbar-inverse">
@@ -20,9 +19,7 @@
     <div>
       <ul class="nav navbar-nav">
         <li class="active"><a href="home.ejs">Home</a></li>
-        <li><a href="../../calc.ejs">Calc</a></li>
-       
-       
+        <li><a href="../../calc.ejs">Calc</a></li>   
       </ul>
       <ul class="nav navbar-nav navbar-right">
         <li class="dropdown"><a class="dropdown-toggle" data-toggle="dropdown" href="#">Login <span class="glyphicon glyphicon-log-in"></span></a>
@@ -48,23 +45,28 @@
     </div>
   </div>
 </nav>
-<div class="col-lg-7">
-  <h1>Nutrition Database</h1>
- 
- <table border="1" width="100%"> 
-  <tr>
-    <th width="25%">Number</th> 
-    <th width="25%">Shrt_Desc</th> 
-    <th width="25%">GmWt_Desc1</th> 
-    <th width="25%">GmWt_Desc2</th> 
-  </tr>
- <% rows.forEach(function(item){ %>
-  <tr>
-     <td><%= item.NDB_No %></td> 
-    <td><%= item.Shrt_Desc %></td> 
-    <td><%= item.GmWt_Desc1 %></td> 
-    <td><%= item.GmWt_Desc2 %></td> 
-  </tr>
- <% }); %>
-</table>
-
+  <div class="col-lg-7">
+    <h1>Nutrition Database</h1> 
+    <table border="1" width="100%"> 
+      <tr>
+        <th width="25%">Number</th> 
+        <th width="25%">Shrt_Desc</th> 
+        <th width="25%">GmWt_Desc1</th> 
+        <th width="25%">GmWt_Desc2</th> 
+      </tr>
+      <% rows.forEach(function(item){ %>
+      <tr>
+        <td><%= item.NDB_No %></td> 
+        <td><%= item.Shrt_Desc %></td> 
+        <td><%= item.GmWt_Desc1 %></td> 
+        <td><%= item.GmWt_Desc2 %></td> 
+      </tr>
+      <% }); %>
+    </table>
+  </div>
+      <a href="/api/list?page=prev">Prev</a>
+      <a href="/api/list?page=next">Next</a>  
+  </div>
+  <div
+</body>
+</html>
