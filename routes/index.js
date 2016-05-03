@@ -14,24 +14,46 @@ exports.index = function (req, res) {
 };
 
 exports.home = function (req, res) {
+    var sqlString = "";
     var pgNum = req.query.page || 1;
+    console.log("page number is " + pgNum);
+    var searchText = req.query.searchText;
+    console.log(searchText);
     pgNum = Number(pgNum);
-    /*
-    $(".move").on("click", "button",function(e){
-        console.log(e.target);
-        console.log(this);
-        if (pgNum !== 1) {
-        pgNum -= 1;
-    } else
-        alert("You are on the first page");
-    });
-    
-    ("next").click(function(){
-        pgNum -= 1;
-    });*/
-    showData(pgNum, req, res);
-};
+    var start = 25 * (pgNum - 1);
+    if (searchText) {
+        sqlString = "SELECT NDB_No, Shrt_Desc, GmWt_Desc1, GmWt_Desc2 from NutritionData WHERE Shrt_Desc like '" + searchText +
+            "%' order by Shrt_Desc limit 25 offset " + start;
+    } else {
+        sqlString = "SELECT NDB_No, Shrt_Desc, GmWt_Desc1, GmWt_Desc2 from NutritionData order by Shrt_Desc limit 25 offset " + start;
+    }
+    db.all(sqlString, function (nutriErr, nutriRows) {
+        if (nutriErr)
+            console.error(nutriErr);
 
+        res.render("index", {
+            rows: nutriRows,
+            page: pgNum,
+            title: "Home"
+        });
+    });
+};
+exports.details = function (req, res) {
+    var id = req.params.id;
+    console.log("id is " + id);
+    var sqlStr = "SELECT NDB_No, Shrt_Desc, GmWt_Desc1, GmWt_Desc2, [Water_(g)], [Energ_Kcal], "
+               + "[Protein_(g)], [Carbohydrt_(g)], [Fiber_TD_(g)], [Sugar_Tot_(g)], [FA_Sat_(g)], "
+               + "[Cholestrl_(mg)] from NutritionData WHERE NDB_No = '" + id + "'";
+    db.get(sqlStr, function (nutriErr, nutriRow) {
+        if (nutriErr)
+            console.error(nutriErr);
+        
+        console.log(nutriRow);
+        res.render("details", {
+            row: nutriRow
+        });
+    });
+};
 exports.calculator = function (req, res) {
     res.render('calc', {
         title: 'Calculator Page'
@@ -44,46 +66,3 @@ exports.add = function (req, res) {
         search: 'Search the database for food'
     });
 };
-// exports.calculator = function(req, res){
-//     res.render('calc', {
-//        title: 'Calculator Page'
-//     });
-// };
-
-// exports.add = function(req, res){
-//     res.render('addFood', {
-//        title: 'Adding Ingredients',
-//        search: 'Search the database for food'
-//     });
-// };
-function prev() {
-    console.log("inside prev");
-    var pgNum = req.query.page;
-    pgNum = Number(pgNum);
-    if (pgNum !== 1) {
-        pgNum -= 1;
-        showData(pgNum);
-    } else
-        alert("You are on the first page");
-};
-
-function next() {
-    console.log("inside next");
-    var pgNum = req.query.page;
-    pgNum = Number(pgNum);
-    pgNum += 1;
-    showData(pgNum, req, res);
-};
-
-function showData(pgNum, req, res){
-    var start = 25 * (pgNum - 1);
-    var sqlString = "SELECT NDB_No, Shrt_Desc, GmWt_Desc1, GmWt_Desc2 from NutritionData order by Shrt_Desc limit 25 offset " + start;
-    db.all(sqlString, function (nutriErr, nutriRows) {
-        if (nutriErr)
-            console.error(nutriErr);
-
-        res.render("index", {
-            rows: nutriRows
-        });
-    });
-}
