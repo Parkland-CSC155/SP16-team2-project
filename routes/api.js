@@ -5,7 +5,6 @@ const APIKEY = 'abcd'; // some unique value that attackers cannot guess
 var sqlite3 = require('sqlite3').verbose();
 var db = new sqlite3.Database('./datasets/nutrition.db');
 //var db = new sqlite3.Database('.sqlnutrition.database.windows.net/nutritondb.db'); 
-var routes = require('../routes');
 /*
 function getApiKey(){
     var reqApiKey = document.getElementById("apikey").value;
@@ -60,11 +59,8 @@ router.get("/search/:text", function (req, res) {
 //- `/api/list?page={pageNumber}&apiKey={apiKey}`
 router.get("/list", function (req, res) {
 
-    var pgNum = req.query.page;
+    var pgNum = req.query.page || 1;
     var start = 25 * (pgNum - 1);
-    /*console.log("page num is " + pgNum); 
-    var num = req._parsedUrl.search;
-    console.log("location.search is " + num);*/
     //SELECT * from NutritionData WHERE  Shrt_Desc like 'a%' order by NDB_No offset 25 rows fetch next 5 rows only
     //sql server --> var sqlString = "SELECT [Fiber_TD_(g)], [Cholestrl_(mg)] from NutritionData order by NDB_No offset " + start + " rows fetch next 25 rows only";
     //for sqlite

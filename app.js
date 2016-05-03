@@ -10,23 +10,23 @@ var bodyParser = require('body-parser');
 //Lets define a port we want to listen to
 var PORT = process.env.port || 3000;
 
-var sqlite3 = require('sqlite3').verbose();  
-var db = new sqlite3.Database('./datasets/nutrition.db'); 
+var sqlite3 = require('sqlite3').verbose();
+var db = new sqlite3.Database('./datasets/nutrition.db');
 
 passport.use(new Strategy(function (username, password, cb) { //cb-callback
-    userDb.users.findByUsername(username, function (err, user) {
-        if (err) { return cb(err); }
-        if (!user) { return cb(null, false); }
-        if (user.password != password) { return cb(null, false); }
-        return cb(null, user);
-    });
+  userDb.users.findByUsername(username, function (err, user) {
+    if (err) { return cb(err); }
+    if (!user) { return cb(null, false); }
+    if (user.password != password) { return cb(null, false); }
+    return cb(null, user);
+  });
 }));
 
-passport.serializeUser(function(user, cb) {
+passport.serializeUser(function (user, cb) {
   cb(null, user.id);
 });
 
-passport.deserializeUser(function(id, cb) {
+passport.deserializeUser(function (id, cb) {
   userDb.users.findById(id, function (err, user) {
     if (err) { return cb(err); }
     cb(null, user);
@@ -50,12 +50,11 @@ app.use(express.static('public'));
 app.use(require('morgan')('combined'));
 app.use(require('cookie-parser')());
 app.use(require('body-parser').urlencoded({ extended: true }));
-app.use(require('express-session')({ 
-    secret: 'keyboard cat', 
-    resave: false, 
-    saveUninitialized: false }));
-
-var pageScope;
+app.use(require('express-session')({
+  secret: 'keyboard cat',
+  resave: false,
+  saveUninitialized: false
+}));
 
 // Initialize Passport and restore authentication state, if any, from the
 // session.
@@ -65,146 +64,21 @@ app.use(passport.session());
 // Retrieve the value of a setting with app.get().
 app.get('/', routes.index);
 app.get('/home', routes.home);
-// validate all requests to the /api -based routes
+app.get('/calculator', routes.calculator);
+app.get('/details/:id', routes.details);
+app.get('/calculator/add', routes.add);
 
-//calculator stuff
-app.get('/calculator', require('connect-ensure-login').ensureLoggedIn(), function(req, res){
-    //setup the session
-    req.session.searchArray = [];
-    req.session.Ingredients = [];
-    req.session.servings = [];
-    
-    //working on these
-    req.session.cal = [];
-    req.session.pro = [];
-    req.session.sugar = [];
-    req.session.carbs = [];
-    
-    res.render('calc', {
-       title: 'Calculator Page'
-    });
-});
-
-//route that adds and searches the food in the database
-app.get('/calculator/add', require('connect-ensure-login').ensureLoggedIn(), function(req, res){
-            
-    console.log("name:" + req.session.searchArray);        
-    console.log('cal:' + req.session.cal);
-    console.log('pro:' + req.session.pro);
-    console.log('carb:' + req.session.sugar);
-    console.log('sugar:' + req.session.carbs);   
-    
-    res.render('addFood', {
-        title: 'Adding Ingredients',
-        search: 'Search the database for food',
-        searchArray: req.session.searchArray,
-        incart: "items in the cart",
-        cart: req.session.Ingredients,
-        serving: req.session.servings,
-       
-       //working on these
-        calories: req.session.cal,
-        protein: req.session.pro,
-        sugar: req.session.sugar,
-        carbs: req.session.carbs
-      
-        
-          
-    });
-});
-
-//adds to the cart
-app.post("/calculator/food", function(req, res, next){
-  var food = req.body.food;
-  var amount = req.body.amount;
-  
-  if (!food == '')
-  {
-    req.session.Ingredients.push(food);
-    req.session.servings.push(amount);
-  }
-  
-  req.session.save( function(err) {
-            req.session.reload( function (err) {
-              res.redirect("/calculator/add"); });
-          });
-  });
-
-//working on updating the db with this
-//its just adding the first one
-//need to make it so there is
-// copy this from the user
-// var records = [
-//     { id: 1, username: 'jack', password: 'secret', displayName: 'Jack', emails: [ { value: 'jack@example.com' } ] }
-//   , { id: 2, username: 'jill', password: 'birthday', displayName: 'Jill', emails: [ { value: 'jill@example.com' } ] }
-// ];
-app.post("/calculator/form", function(req, res, next){
-  
+app.post("/calculator/form", function (req, res, next) {
   var searchDB = req.body.searchDB;
-  var calcsql = "SELECT * from NutritionData WHERE  Shrt_Desc like '" + searchDB + "%'";
-      
-  db.all(calcsql, function(nutriErr, nutriRows){
-            var data=[];
-            var data1=[];
-            var data2=[];
-            var data3=[];
-            var data4=[];
-            
-            nutriRows.forEach(function (nutriRows) {  
-              
-              var a = nutriRows.Shrt_Desc;
-              var a1 = nutriRows.Energ_Kcal;
-              var a2 = nutriRows['Protein_(g)'];
-              var a3 = nutriRows['Carbohydrt_(g)'];
-              var a4 = nutriRows['Sugar_Tot_(g)'];
-              //making sure the data isnt null
-              if (a1 == null){
-                a1 = 0;
-              }
-              if (a2 == null){
-                a2 = 0;
-              }
-              if (a3 == null){
-                a3 = 0;
-              }
-              if (a4 == null){
-                a4 = 0;
-              }
-              
-              data.push(a);
-              data1.push(a1);
-              data2.push(a2);
-              data3.push(a3);
-              data4.push(a4);
-                            
-        })
-        req.session.searchArray = data.slice();
-        req.session.cal = data1.slice();
-        req.session.pro = data2.slice();
-        req.session.carbs = data3.slice();
-        req.session.sugar = data4.slice();
-        
-        var data=[];
-        var data1=[];
-        var data2=[];
-        var data3=[];
-        var data4=[];
-       
-        
-        req.session.save( function(err) {
-            req.session.reload( function (err) {
-              res.redirect("/calculator/add"); });
-         });
-     });
-  });
-         
+  console.log(searchDB);
 
-app.get("/session-example", function(req, res, next){
+  res.redirect("/calculator/add");
+});
+app.get("/session-example", function (req, res, next) {
 
-// ensure that the data on the session
+  // ensure that the data on the session
   //has been set for the first request
-  
-  if(!req.session.viewCount){
+  if (!req.session.viewCount) {
     req.session.viewCount = 0;
   }
 
@@ -214,52 +88,45 @@ app.get("/session-example", function(req, res, next){
   // requests, but is not important enough
   // to put into a database
   req.session.chosenIngredients = [
-    { id: 1, qty: 3}
+    { id: 1, qty: 3 }
   ];
-  
-  console.log(req.session.chosenIngredients);
+
   res.send("View Count: " + req.session.viewCount);
 });
-/* Define routes.
-app.get('/',
-  function(req, res) {
-    res.render('home', { user: req.user });
-  });
-*/
 app.get('/login',
-  function(req, res){
+  function (req, res) {
     res.render('login');
   });
-  
-app.post('/login', 
+
+app.post('/login',
   passport.authenticate('local', { failureRedirect: '/login' }),
-  function(req, res) {
-    res.redirect('/home');
+  function (req, res) {
+    res.redirect('/home'); 
   });
-  
+
 app.get('/logout',
-  function(req, res){
+  function (req, res) {
     req.logout();
     res.redirect('/');
   });
 
 app.get('/profile',
   require('connect-ensure-login').ensureLoggedIn(),
-  function(req, res){
+  function (req, res) {
     res.render('profile', { user: req.user });
   });
-  
+
 app.use("/api", require("./routes/api"));
 
-app.get('*', function(req, res) {
+app.get('*', function (req, res) {
   res.send('Bad Route');
 });
 
 // Create a server
 // Binds and listens for connections on the specified host and port
 // and returns an http.Server object
-var server = app.listen(PORT, function() {
-    
-    //Callback triggered when server is successfully listening.
-    console.log('Server listening on http://localhost:' + PORT);
+var server = app.listen(PORT, function () {
+
+  //Callback triggered when server is successfully listening.
+  console.log('Server listening on http://localhost:' + PORT);
 }); 

@@ -20,8 +20,6 @@
       <ul class="nav navbar-nav">
         <li class="active"><a href="home.ejs">Home</a></li>
         <li><a href="../../calc.ejs">Calc</a></li>
-        <li><a href="/profile">Profile</a></li>
-        <li><a href="/logout">Logout</a></li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
         <li class="dropdown"><a class="dropdown-toggle" data-toggle="dropdown" href="#">Login <span class="glyphicon glyphicon-log-in"></span></a>
@@ -48,8 +46,12 @@
   </div>
 </nav>
 <div class="col-lg-7">
-  <h1>Nutrition Database</h1>
-   
+  <p>
+    <form action"/home" method="get">
+      <input type="text" name="searchText" />
+      <button type="submit">Search</button>
+    </form>
+  </p>
     <table border="1" width="100%"> 
       <tr>
         <th width="25%">Number</th> 
@@ -59,41 +61,21 @@
       </tr>
       <% rows.forEach(function(item){ %>
       <tr>
-        <td><%= item.NDB_No %></td> 
+        <td><a href="/details/<%= item.NDB_No %>"><%= item.NDB_No %></a></td> 
         <td><%= item.Shrt_Desc %></td> 
         <td><%= item.GmWt_Desc1 %></td> 
         <td><%= item.GmWt_Desc2 %></td> 
       </tr>
       <% }); %>
     </table>
-  <div class="move">
-    <p>
-    <button id="prev" type="button">Prev</button>
-    <button id="next" type="button">Next</button>
-    </p>
-  </div>
-  <!--
-      <form id="my_form" action="../../routes/index.js" method="get">
-        <input type="button" value="prev" name="prev"  onClick="">
-        <input type="button" value="next" name="next" onClick="">
-      </form>
-      <a href="/home">Prev</a>
-      <a href="/home">Next</a>  
-      <a href="/api/list?page=1">List of Items-->
-<!--
-  <form action="routes/api.js" method="get">
   <div>
     <p>
-      <a href="/api/list">List of Items</p>
+      <a href="/home?page=<%= page - 1 %>">Prev</a>
+      <a href="/home?page=<%= page + 1 %>"><%= page + 1 %></a> 
+      <a href="/home?page=<%= page + 2 %>"><%= page + 2 %></a>      
+      <a href="/home?page=<%= page + 3 %>"><%= page + 3 %></a>  
+      <a href="/home?page=<%= page + 1 %>">Next</a>    
+    </p>
   </div>
-</div>
-<!--
-   <form action="routes/api.js" method="get">
->>>>>>> refs/remotes/origin/master
-      Please enter ApiKey:
-      <input id="apikey" type="text" name="apikey"><br>
-      <input type="button" value="Enter" onClick="getApiKey()">
-  </form>
--->
 </body>
 </html>
