@@ -5,7 +5,6 @@
   <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
   <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
-<script src="js/login.js"></script>
 <script src="js/onClick.js"></script>
 <script src="app.js"></script>
 <script src="routes/api.js"></script>
@@ -19,12 +18,10 @@
     </div>
     <div>
       <ul class="nav navbar-nav">
-        <li class="active"><a href="/home">Home</a></li>
-        <li><a href="/calculator">Calc</a></li>
+        <li class="active"><a href="home.ejs">Home</a></li>
+        <li><a href="../../calc.ejs">Calc</a></li>
         <li><a href="/profile">Profile</a></li>
         <li><a href="/logout">Logout</a></li>
-       
-       
       </ul>
       <ul class="nav navbar-nav navbar-right">
         <li class="dropdown"><a class="dropdown-toggle" data-toggle="dropdown" href="#">Login <span class="glyphicon glyphicon-log-in"></span></a>
@@ -52,6 +49,39 @@
 </nav>
 <div class="col-lg-7">
   <h1>Nutrition Database</h1>
+   
+    <table border="1" width="100%"> 
+      <tr>
+        <th width="25%">Number</th> 
+        <th width="25%">Shrt_Desc</th> 
+        <th width="25%">GmWt_Desc1</th> 
+        <th width="25%">GmWt_Desc2</th> 
+      </tr>
+      <% rows.forEach(function(item){ %>
+      <tr>
+        <td><%= item.NDB_No %></td> 
+        <td><%= item.Shrt_Desc %></td> 
+        <td><%= item.GmWt_Desc1 %></td> 
+        <td><%= item.GmWt_Desc2 %></td> 
+      </tr>
+      <% }); %>
+    </table>
+  <div class="move">
+    <p>
+    <button id="prev" type="button">Prev</button>
+    <button id="next" type="button">Next</button>
+    </p>
+  </div>
+  <!--
+      <form id="my_form" action="../../routes/index.js" method="get">
+        <input type="button" value="prev" name="prev"  onClick="">
+        <input type="button" value="next" name="next" onClick="">
+      </form>
+      <a href="/home">Prev</a>
+      <a href="/home">Next</a>  
+      <a href="/api/list?page=1">List of Items-->
+<!--
+  <form action="routes/api.js" method="get">
   <div>
     <p>
       <a href="/api/list">List of Items</p>
@@ -59,6 +89,7 @@
 </div>
 <!--
    <form action="routes/api.js" method="get">
+>>>>>>> refs/remotes/origin/master
       Please enter ApiKey:
       <input id="apikey" type="text" name="apikey"><br>
       <input type="button" value="Enter" onClick="getApiKey()">
