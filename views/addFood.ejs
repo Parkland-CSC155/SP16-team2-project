@@ -9,11 +9,10 @@
 </head>
 
 <body>
-  <% include partials/page/header.ejs %>
-  <% include partials/page/nav.ejs %>
+<% include partials/page/header.ejs %>
 
   <h1><%= pagetitle %> -- <b><%= title %></b></h1>
-  <p><a href="/calculator">Back to cart</a></p>
+  <p><a href="/calculator">Back</a></p>
 
 <form action="/calculator/form" method="post">
   <label><%= search %></label>
@@ -22,15 +21,48 @@
   
 </form>
  
-    <form action="/calculator/submit">
-        <p align="left">
-            <select multiple size="20" style="width: 400px;">
-                <option value="test">test</option>
-            </select>
-                <button type="submit" value="Submit">Submit</button>
-                <button type="reset" onclick="alert('Resetting the cart')" value="Reset">Reset</button>
-        </p>
-    </form>
+<form action="/calculator/food" method="post">
+  <p align="left">
+  <select multiple size="20" name="food" style="width: 400px;">
+      <% for(var i = 0; i < searchArray.length; i++) { %>
+        <option value="<%= searchArray[i] %>"><%= searchArray[i] %></option>
+      <% } %>
+    </select>
+    Number of servings
+    <select name="amount">quantity
+      <option>1</option>
+      <option>2</option>
+      <option>3</option>
+      <option>4</option>
+      <option>5</option>
+    </select>
+    <button type="submit">Add</button>
+  </p>
+</form>
+    
+    <h1><%= incart %></h1>    
+    
+    <table border="1" >
+      <tr>
+        <th>Food</th><th>Serving Size</th><th>Calories (per serving)</th><th>Sugar (per serving)</th><th>Protein (per serving)</th><th>Carbs (per serving)</th>   
+      </tr>
+    <% for (var i = 0; i < cart.length; i++) { %>
+      <tr>
+        <td><%= cart[i] %></td>
+        <td><%= serving[i] %></td>
+        <td><%= calories[i] %></td>
+        <td><%= sugar[i] %></td>
+        <td><%= protein[i] %></td>
+        <td><%= carbs[i] %></td>
+        
+      </tr>    
+    <% } %>
+    </table>
+    
+    
+    
+    
+    
 
 
   <% include partials/page/footer.ejs %>
