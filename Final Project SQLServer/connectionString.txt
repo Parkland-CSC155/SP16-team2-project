@@ -1,0 +1,1 @@
+Data Source=tcp:sqlnutrition.database.windows.net,1433;Initial Catalog=nutritiondb;User ID=dsinghania1@sqlnutrition;Password=
