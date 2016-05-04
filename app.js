@@ -84,16 +84,144 @@ app.use(passport.session());
 // Retrieve the value of a setting with app.get().
 app.get('/', routes.index);
 app.get('/home', routes.home);
-app.get('/calculator', routes.calculator);
 app.get('/details/:id', routes.details);
-app.get('/calculator/add', routes.add);
 
-app.post("/calculator/form", function (req, res, next) {
-  var searchDB = req.body.searchDB;
-  console.log(searchDB);
-
-  res.redirect("/calculator/add");
+//calculator stuff
+app.get('/calculator', require('connect-ensure-login').ensureLoggedIn(), function(req, res){
+    //setup the session
+    req.session.searchArray = [];
+    req.session.Ingredients = [];
+    req.session.servings = [];
+    
+    //working on these
+    req.session.cal = [];
+    req.session.pro = [];
+    req.session.sugar = [];
+    req.session.carbs = [];
+    
+    res.render('calc', {
+       title: 'Calculator Page'
+    });
 });
+
+//route that adds and searches the food in the database
+app.get('/calculator/add', require('connect-ensure-login').ensureLoggedIn(), function(req, res){
+            
+    console.log("name:" + req.session.searchArray);        
+    console.log('cal:' + req.session.cal);
+    console.log('pro:' + req.session.pro);
+    console.log('carb:' + req.session.sugar);
+    console.log('sugar:' + req.session.carbs);   
+    
+    res.render('addFood', {
+        title: 'Adding Ingredients',
+        search: 'Search the database for food',
+        searchArray: req.session.searchArray,
+        incart: "items in the cart",
+        cart: req.session.Ingredients,
+        serving: req.session.servings
+       
+    //    //working on these
+    //     calories: req.session.cal,
+    //     protein: req.session.pro,
+    //     sugar: req.session.sugar,
+    //     carbs: req.session.carbs  
+        
+          
+    });
+});
+
+//adds to the cart
+app.post("/calculator/food", function(req, res, next){
+  var food = req.body.food;
+  var amount = req.body.amount;
+  
+  if (!food == '')
+  {
+    req.session.Ingredients.push(food);
+    req.session.servings.push(amount);
+  }
+  
+  req.session.save( function(err) {
+            req.session.reload( function (err) {
+              res.redirect("/calculator/add"); });
+          });
+  });
+
+//working on updating the db with this
+//its just adding the first one
+//need to make it so there is
+// copy this from the user
+// var records = [
+//     { id: 1, username: 'jack', password: 'secret', displayName: 'Jack', emails: [ { value: 'jack@example.com' } ] }
+//   , { id: 2, username: 'jill', password: 'birthday', displayName: 'Jill', emails: [ { value: 'jill@example.com' } ] }
+// ];
+app.post("/calculator/form", function(req, res, next){
+  
+  var searchDB = req.body.searchDB;
+  var calcsql = "SELECT * from NutritionData WHERE  Shrt_Desc like '" + searchDB + "%'";
+  req.session.searchArray = [];
+  db.all(calcsql, function(nutriErr, nutriRows){
+            var data=[];
+            var data1=[];
+            var data2=[];
+            var data3=[];
+            var data4=[];
+            
+            nutriRows.forEach(function (nutriRows) {  
+              
+              var a = nutriRows.Shrt_Desc;
+              var a1 = nutriRows.Energ_Kcal;
+              var a2 = nutriRows['Protein_(g)'];
+              var a3 = nutriRows['Carbohydrt_(g)'];
+              var a4 = nutriRows['Sugar_Tot_(g)'];
+              //making sure the data isnt null
+              if (a1 == null){
+                a1 = 0;
+              }
+              if (a2 == null){
+                a2 = 0;
+              }
+              if (a3 == null){
+                a3 = 0;
+              }
+              if (a4 == null){
+                a4 = 0;
+              }
+              
+              var item = {
+                  name: a,
+                  cal: a1,
+                  pro: a2,
+                  carbs: a3,
+                  sugar: a4
+              };
+              
+              req.session.searchArray.push(item);
+              
+                            
+        })
+        req.session.searchArray = data.slice();
+        req.session.cal = data1.slice();
+        req.session.pro = data2.slice();
+        req.session.carbs = data3.slice();
+        req.session.sugar = data4.slice();
+        
+        var data=[];
+        var data1=[];
+        var data2=[];
+        var data3=[];
+        var data4=[];
+       
+        
+        req.session.save( function(err) {
+            req.session.reload( function (err) {
+              res.redirect("/calculator/add"); });
+         });
+     });
+  });
+  
+
 app.get("/session-example", function (req, res, next) {
 
   // ensure that the data on the session

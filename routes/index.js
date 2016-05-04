@@ -88,15 +88,3 @@ exports.details = function (req, res) {
         });
     });
 };
-exports.calculator = function (req, res) {
-    res.render('calc', {
-        title: 'Calculator Page'
-    });
-};
-
-exports.add = function (req, res) {
-    res.render('addFood', {
-        title: 'Adding Ingredients',
-        search: 'Search the database for food'
-    });
-};
