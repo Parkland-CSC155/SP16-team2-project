@@ -143,7 +143,7 @@ app.post("/calculator/form", function(req, res, next){
   
   var searchDB = req.body.searchDB;
   var calcsql = "SELECT * from NutritionData WHERE  Shrt_Desc like '" + searchDB + "%'";
-      
+  req.session.searchArray = [];
   db.all(calcsql, function(nutriErr, nutriRows){
             var data=[];
             var data1=[];
@@ -172,11 +172,16 @@ app.post("/calculator/form", function(req, res, next){
                 a4 = 0;
               }
               
-              data.push(a);
-              data1.push(a1);
-              data2.push(a2);
-              data3.push(a3);
-              data4.push(a4);
+              var item = {
+                  name: a,
+                  cal: a1,
+                  pro: a2,
+                  carbs: a3,
+                  sugar: a4
+              };
+              
+              req.session.searchArray.push(item);
+              
                             
         })
         req.session.searchArray = data.slice();
