@@ -101,13 +101,13 @@ app.get('/calculator/add', require('connect-ensure-login').ensureLoggedIn(), fun
         searchArray: req.session.searchArray,
         incart: "items in the cart",
         cart: req.session.Ingredients,
-        serving: req.session.servings,
+        serving: req.session.servings
        
-       //working on these
-        calories: req.session.cal,
-        protein: req.session.pro,
-        sugar: req.session.sugar,
-        carbs: req.session.carbs
+    //    //working on these
+    //     calories: req.session.cal,
+    //     protein: req.session.pro,
+    //     sugar: req.session.sugar,
+    //     carbs: req.session.carbs
       
         
           
