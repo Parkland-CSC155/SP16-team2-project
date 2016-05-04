@@ -10,7 +10,7 @@
          Please <a href="/login">log in</a>.</p>
   <% } else { %>
     	<p>Hello, <%= user.username %>. View your <a href="/profile">profile</a>.</p>
-      
+  
         <div class="col-lg-7">
           <p>
             <form action"/home" method="get">
@@ -36,25 +36,35 @@
             </table>
           <div>
             <p>
-             <a href="/home?page=1">First</a> 
+             <a href="/home?page=<%= pageFirst %>">First</a> 
               <% if( page === 1) { %>
-                <a href="/home?page=1">Prev</a>
+                   <% if(text) { %>                    
+                     <a href="/home?page=1&searchText=<%=text%>">Prev</a>
+                    <% } else { %>
+                         <a href="/home?page=1">Prev</a>
+                    <% } %>  
               <% } else { %>
-                <a href="/home?page=<%= page - 1 %>">Prev</a>
+                 <a href="/home?page=<%= pagePrev %>">Prev</a>
                 <% } %>
-              <a class="active" href="/home?page=<%= page %>"><%= page %></a> 
-              <a href="/home?page=<%= page + 1 %>"><%= page + 1 %></a> 
-              <a href="/home?page=<%= page + 2 %>"><%= page + 2 %></a>      
-              <a href="/home?page=<%= page + 3 %>"><%= page + 3 %></a>
-              <% if( page === length ) { %>  
-                <a href="/home?page=<%= page %>">Next</a>
-              <% } else { %>  
-                <a href="/home?page=<%= page + 1 %>">Next</a> 
+              <a class="active" href="/home?page=<%= curpg %>"><%= page %></a> 
+              <a href="/home?page=<%= pageTwo %>"><%= page + 1 %></a> 
+              <a href="/home?page=<%= pageThree %>"><%= page + 2 %></a>      
+              <a href="/home?page=<%= pageFour %>"><%= page + 3 %></a>
+              <% if( page === length ) { %> 
+                    <% if(text) { %>  
+                       <a href="/home?page=<%= page %>&searchText=<%=text%>">Next</a>
+                    <% } else { %> 
+                        <a href="/home?page=<%= page %>">Next</a>
+                    <% } %>  
+              <% } else { %>
+                 <a href="/home?page=<%= pageNext %>">Next</a> 
               <% } %> 
-              <a href="/home?page=<%=length %>">Last</a> 
+              <a href="/home?page=<%= pageLast %>">Last</a> 
             </p>
           </div>
       
+    <% } %>
+  
   <% include partials/page/footer.ejs %>
   <% include partials/page/jsdefaults.ejs %>
 </body>
