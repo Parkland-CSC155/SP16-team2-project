@@ -4,6 +4,7 @@
 <body>
   <% include partials/page/header.ejs %>
   <% include partials/page/nav.ejs %>
+  
   <% if (!user) { %>
 	    <p><h4>Welcome to our App!</h4>
          Please <a href="/login">log in</a>.</p>
@@ -35,11 +36,22 @@
     </table>
   <div>
     <p>
-      <a href="/home?page=<%= page - 1 %>">Prev</a>
-      <a href="/home?page=<%= page + 1 %>"><%= page + 1 %></a> 
-      <a href="/home?page=<%= page + 2 %>"><%= page + 2 %></a>      
-      <a href="/home?page=<%= page + 3 %>"><%= page + 3 %></a>  
-      <a href="/home?page=<%= page + 1 %>">Next</a>    
+      <a href="/home?page=1">First</a> 
+        <% if( page === 1) { %>
+          <a href="/home?page=1">Prev</a>
+        <% } else { %>
+          <a href="/home?page=<%= page - 1 %>">Prev</a>
+          <% } %>
+        <a class="active" href="/home?page=<%= page %>"><%= page %></a> 
+        <a href="/home?page=<%= page + 1 %>"><%= page + 1 %></a> 
+        <a href="/home?page=<%= page + 2 %>"><%= page + 2 %></a>      
+        <a href="/home?page=<%= page + 3 %>"><%= page + 3 %></a>
+        <% if( page === length ) { %>  
+          <a href="/home?page=<%= page %>">Next</a>
+        <% } else { %>  
+          <a href="/home?page=<%= page + 1 %>">Next</a> 
+        <% } %> 
+        <a href="/home?page=<%=length %>">Last</a> 
     </p>
   </div>
       

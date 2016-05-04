@@ -55,10 +55,3 @@ exports.details = function (req, res) {
         });
     });
 };
-
-//for index.ejs prev  button
-/* 
-    <% if( page === 1) %>
-      <a href="/home?page=1">Prev</a>
-    <% else %>
-    */

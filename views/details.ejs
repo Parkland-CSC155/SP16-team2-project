@@ -4,7 +4,13 @@
 <body>
   <% include partials/page/header.ejs %>
   <% include partials/page/nav.ejs %>
-
+  
+  <% if (!user) { %>
+	    <p><h4>Welcome to our App!</h4>
+         Please <a href="/login">log in</a>.</p>
+  <% } else { %>
+    	<p>Hello, <%= user.username %>. View your <a href="/profile">profile</a>.</p>
+      
   <div class="col-lg-7">
     <h1><%= pagetitle %>Details Page</h1> 
     <table border="1" width="100%"> 

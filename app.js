@@ -64,9 +64,7 @@ app.use(passport.session());
 // Retrieve the value of a setting with app.get().
 app.get('/', routes.index);
 app.get('/home', routes.home);
-
 app.get('/details/:id', routes.details);
-
 
 //calculator stuff
 app.get('/calculator', require('connect-ensure-login').ensureLoggedIn(), function(req, res){
