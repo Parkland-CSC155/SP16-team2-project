@@ -2,13 +2,17 @@
 <html lang="en">
 <head><% include partials/page/head.ejs %>
 </head>
-
 <body>
 <% include partials/page/header.ejs %>
-
+<% include partials/page/nav.ejs %>
   <h1><%= pagetitle %> -- <b><%= title %></b></h1>  
-  <p><a href="/calculator/add"><b>Add ingredient to list</b></a></p>
- 
+  <p><a href="/calculator/add">Add ingredient to list</a></p>
+  
+  <p>
+    <select multiple size="20" style="width: 400px;">
+      <option value="test">test</option>
+    </select>
+  </p>
 
   <% include partials/page/footer.ejs %>
   <% include partials/page/jsdefaults.ejs %>

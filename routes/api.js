@@ -2,14 +2,30 @@ var express = require("express");
 var router = express.Router();
 var app = express();
 const APIKEY = 'abcd'; // some unique value that attackers cannot guess
-var sqlite3 = require('sqlite3').verbose();
-var db = new sqlite3.Database('./datasets/nutrition.db');
-//var db = new sqlite3.Database('.sqlnutrition.database.windows.net/nutritondb.db'); 
-/*
-function getApiKey(){
-    var reqApiKey = document.getElementById("apikey").value;
+//var sqlite3 = require('sqlite3').verbose();
+var mssql = require('mssql');
+//var db = new sqlite3.Database('./datasets/nutrition.db');
+//var db = new mssql.Database('sqlnutrition.database.windows.net/nutritondb.db'); 
+var config = {
+    user: '...',
+    password: '..',
+    server: 'localhost', // You can use 'localhost\\instance' to connect to named instance
+    database: 'sqlnutrition.database.windows.net/nutritondb.db',
+    options: {
+        encrypt: true // Use this if you're on Windows Azure
+    }
 }
-*/
+
+var connection = new sql.Connection(config, function(err) {
+    // ... error checks
+    // Query
+    var request = new sql.Request(connection); // or: var request = connection.request();
+    request.query('select 1 as number', function(err, recordset) {
+        // ... error checks
+
+        console.dir(recordset);
+    });
+});
 
 router.use(function (req, res, next) {
     if (req.baseUrl !== "/api") {

@@ -15,7 +15,8 @@
 				"--nolazy"
 			],
 			"env": {
-				"NODE_ENV": "development"
+				"NODE_ENV": "development",
+				"MS_TableConnectionString": "Driver={SQL Server Native Client 11.0};Server=tcp:sqlnutrition.database.windows.net,1433;Database=nutritiondb;Uid=dsinghania1@sqlnutrition;Pwd={mypasswordhere};Encrypt=yes;TrustServerCertificate=no;Connection Timeout=30;"
 			},
 			"externalConsole": false,
 			"sourceMaps": false,
