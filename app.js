@@ -101,7 +101,7 @@ app.get('/login',
 app.post('/login',
   passport.authenticate('local', { failureRedirect: '/login' }),
   function (req, res) {
-    res.redirect('/home'); 
+    res.redirect('/home'); // res.redirect('/home'); 
   });
 
 app.get('/logout',
