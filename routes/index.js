@@ -34,7 +34,8 @@ exports.home = function (req, res) {
         res.render("index", {
             rows: nutriRows,
             page: pgNum,
-            title: "Home"
+            title: "Home",
+            user: req.user
         });
     });
 };
@@ -66,3 +67,9 @@ exports.add = function (req, res) {
         search: 'Search the database for food'
     });
 };
+//for index.ejs prev  button
+/* 
+    <% if( page === 1) %>
+      <a href="/home?page=1">Prev</a>
+    <% else %>
+    */

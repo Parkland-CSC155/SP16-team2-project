@@ -4,7 +4,7 @@
 function Submitted() {
     var name = document.getElementById("name").value;
 	var portion = document.getElementById("portion").value;
-    var sql = "SELECT * from NutritionData WHERE  Shrt_Desc like '" + name + "%'";
+    var sql = "SELECT * from NutritionData WHERE  Shrt_Desc like '" + name + "%'";  
     console.log(sql);
 }
 

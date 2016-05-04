@@ -1,13 +1,27 @@
-<form action="/login" method="post">
-	<div>
-	<label>Username:</label>
-	<input type="text" name="username"/><br/>
-	</div>
-	<div>
-	<label>Password:</label>
-	<input type="password" name="password"/>
-	</div>
-	<div>
-	<input type="submit" value="Submit"/>
-	</div>
-</form>
+<!DOCTYPE html>
+<html>
+<head><% include partials/page/head.ejs %></head>
+<body>
+  <% include partials/page/header.ejs %>
+  <% include partials/page/nav.ejs %>
+<div>
+	<form action="/login" method="post">
+		<div>
+			<label>Username:</label>
+			<input type="text" name="username"/><br/>
+		</div>
+		<div>
+			<label>Password:</label>
+			<input type="password" name="password"/>	
+		</div>
+		<div>
+			<input type="submit" value="Submit"/>
+		</div>
+	</form>
+</div>
+
+  <% include partials/page/footer.ejs %>
+  <% include partials/page/jsdefaults.ejs %>
+  
+</body>
+</html>

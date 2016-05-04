@@ -1,50 +1,15 @@
 <!DOCTYPE html>
 <html>
-<head>
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
-  <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
-<script src="js/onClick.js"></script>
-<script src="app.js"></script>
-<script src="routes/api.js"></script>
-<script src="routes/index.js"></script>
-</head>
+<head><% include partials/page/head.ejs %></head>
 <body>
-  <nav class="navbar navbar-inverse">
-  <div class="container-fluid">
-    <div class="navbar-header">
-      <a class="navbar-brand" href="#">Nutrition Database</a>
-    </div>
-    <div>
-      <ul class="nav navbar-nav">
-        <li class="active"><a href="home.ejs">Home</a></li>
-        <li><a href="../../calc.ejs">Calc</a></li>
-      </ul>
-      <ul class="nav navbar-nav navbar-right">
-        <li class="dropdown"><a class="dropdown-toggle" data-toggle="dropdown" href="#">Login <span class="glyphicon glyphicon-log-in"></span></a>
-          <div class="dropdown-menu">
-            <form id="formLogin" class="form container-fluid">
-              <div class="form-group">
-                <label for="usr">Name:</label>
-                <input type="text" class="form-control" id="usr">
-              </div>
-              <div class="form-group">
-                <label for="pwd">Password:</label>
-                <input type="password" class="form-control" id="pwd">
-              </div>
-              <button type="button" id="btnLogin" class="btn btn-block">Login</button>
-            </form>
-            <div class="container-fluid">
-              <br>
-              <a class="small" href="#">Forgot password?</a>
-            </div> 	
-          </div>
-        </li>
-      </ul>
-    </div>
-  </div>
-</nav>
+  <% include partials/page/header.ejs %>
+  <% include partials/page/nav.ejs %>
+  <% if (!user) { %>
+	    <p><h4>Welcome to our App!</h4>
+         Please <a href="/login">log in</a>.</p>
+  <% } else { %>
+    	<p>Hello, <%= user.username %>. View your <a href="/profile">profile</a>.</p>
+  
 <div class="col-lg-7">
   <p>
     <form action"/home" method="get">
@@ -77,5 +42,10 @@
       <a href="/home?page=<%= page + 1 %>">Next</a>    
     </p>
   </div>
+      
+  <% } %>
+  
+  <% include partials/page/footer.ejs %>
+  <% include partials/page/jsdefaults.ejs %>
 </body>
 </html>
