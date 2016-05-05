@@ -9,6 +9,7 @@ var bodyParser = require('body-parser');
 //Lets define a port we want to listen to
 var PORT = process.env.port || 3000;
 var mssql = require('mssql');
+
 passport.use(new Strategy(function (username, password, cb) { //cb-callback
   userDb.users.findByUsername(username, function (err, user) {
     if (err) { return cb(err); }
@@ -30,7 +31,7 @@ passport.deserializeUser(function (id, cb) {
 });
 
 // Assigns / Sets view engine extension to ejs
-app.set('views', __dirname + '/views');
+app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
 
 // The app.locals object has properties that are local variables within the application.
@@ -38,8 +39,8 @@ app.locals.pagetitle = "Nutrition Database ";
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
-
-app.use(express.static('public'));
+app.use(logger('dev'));
+app.use(express.static(path.join(__dirname, 'public')));
 
 // Use application-level middleware for common functionality, including
 // logging, parsing, and session handling.
@@ -217,6 +218,7 @@ app.get("/session-example", function (req, res, next) {
 
   res.send("View Count: " + req.session.viewCount);
 });
+
 app.get('/login',
   function (req, res) {
     res.render('login');
@@ -242,6 +244,38 @@ app.get('/profile',
 
 app.use("/api", require("./routes/api"));
 
+// catch 404 and forward to error handler
+app.use(function(req, res, next) {
+    var err = new Error('Not Found');
+    err.status = 404;
+    next(err);
+});
+
+// error handlers
+
+// development error handler
+// will print stacktrace
+if (app.get('env') === 'development') {
+    app.use(function(err, req, res, next) {
+        res.status(err.status || 500);
+        res.send({
+            message: err.message,
+            error: err
+        });
+    });
+} else {
+
+    // production error handler
+    // no stacktraces leaked to user
+    app.use(function(err, req, res, next) {
+        res.status(err.status || 500);
+        res.send({
+            message: err.message,
+            error: err
+        });
+    });
+}
+
 app.get('*', function (req, res) {
   res.send('Bad Route');
 });
@@ -249,8 +283,7 @@ app.get('*', function (req, res) {
 // Create a server
 // Binds and listens for connections on the specified host and port
 // and returns an http.Server object
-var server = app.listen(PORT, function () {
-
-  //Callback triggered when server is successfully listening.
-  console.log('Server listening on http://localhost:' + PORT);
-}); 
+var server = http.createServer(app);
+server.listen(port, function(){
+   console.log("app listening on port: " + port);  
+});
