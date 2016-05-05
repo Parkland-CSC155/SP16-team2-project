@@ -124,6 +124,7 @@ exports.home = function (req, res) {
 }
 
 exports.details = function (req, res) {
+    var sqlStr = "";
     var id = req.params.id;
     console.log("id is " + id);
     var connectionString = process.env.MS_TableConnectionString;
