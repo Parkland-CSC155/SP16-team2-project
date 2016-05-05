@@ -78,11 +78,11 @@ exports.home = function (req, res) {
         return new sql.Request().query(sqlString).then(function (recordset) {
             console.dir(recordset);
             var record = recordset[0];
-
+            console.log(record);
             new sql.Request().query(dbTotlength).then(function (recordset1) {
                 console.dir(recordset1);
                 var record1 = recordset1[0];
-
+                  console.log(record1);
                 len = recordset1['count(*)'];
                 console.log("len/25 is " + len / 25);
                 var numPages = Math.round(len / 25);
@@ -121,7 +121,7 @@ exports.home = function (req, res) {
                 }
 
                 res.render("index", {
-                    rows:      nutriRows,
+                    rows:      record,
                     page:      pgNum,
                     title:     "Home",
                     user:      req.user,
@@ -160,7 +160,7 @@ exports.details = function (req, res) {
         return new sql.Request().query(sqlString).then(function (recordset) {
             console.dir(recordset);
             var record = recordset[0];
-
+  console.log(record);
             res.render("details", {
                 row: record,
                 user: req.user
