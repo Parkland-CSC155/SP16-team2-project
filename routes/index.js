@@ -36,8 +36,8 @@ exports.index = function (req, res) {
 };
 
 exports.home = function (req, res) {
-    var sqlString = "", len, dbTotLength;
-    var pgPrev, PgOne, pgTwo, pgThree, pgFour,pgNext, pgPrev, pgFirst, pgLast ;
+    var sqlString = "", len, dbTotLength = "";
+    var pgPrev, PgOne, pgTwo, pgThree, pgFour, pgNext, pgFirst, pgLast;
     var pgNum = req.query.page || 1;
     console.log("page number is " + pgNum);
     var searchText = req.query.searchText;
@@ -46,7 +46,7 @@ exports.home = function (req, res) {
     var skip = 25 * (pgNum - 1);
 
     var connectionString = process.env.MS_TableConnectionString;
-    
+
     sql.connect(connectionString).then(function () {
         if (searchText) {
             sqlString = `
@@ -62,9 +62,6 @@ exports.home = function (req, res) {
                         FROM   NutritionData
                         WHERE   Shrt_Desc LIKE '${searchText}'
                             `;
-            //"Select count(*) from NutritionData WHERE Shrt_Desc like '" + searchText  + "%';";            
-            //sqlString = "SELECT NDB_No, Shrt_Desc, GmWt_Desc1, GmWt_Desc2 from NutritionData WHERE Shrt_Desc like '" + searchText +
-            //  "%' order by Shrt_Desc limit 25 offset " + start + ";";
         } else {
             sqlString = `
                 SELECT  NDB_No, Shrt_Desc, GmWt_Desc1, GmWt_Desc2
@@ -77,65 +74,106 @@ exports.home = function (req, res) {
                 SELECT count(*)
                 FROM   NutritionData
                     `;
-            //"Select count(*) from NutritionData ;"; 
-            //sqlString = "SELECT NDB_No, Shrt_Desc, GmWt_Desc1, GmWt_Desc2 from NutritionData order by Shrt_Desc limit 25 offset " + start + ";";
         }
         return new sql.Request().query(sqlString).then(function (recordset) {
             console.dir(recordset);
             var record = recordset[0];
-            
-            new sql.Request().query(dbTotlength).then(function (recordset1) {  
+
+            new sql.Request().query(dbTotlength).then(function (recordset1) {
                 console.dir(recordset1);
-                var record1 = recordset1[0];           
+                var record1 = recordset1[0];
+
                 len = recordset1['count(*)'];
-                console.log("len/25 is " + len/25);
-                var numPages = Math.round(len/25);
-                
-                if(searchText){
-                    pgFirst = 1 + "&searchText=" + searchText; 
-                    pgPrev =  pgNum - 1 + "&searchText=" + searchText; 
-                    pgOne =   pgNum + '&searchText=' + searchText; 
-                    pgTwo =   pgNum + 1 + "&searchText=" + searchText; 
-                    pgThree = pgNum + 2 + "&searchText=" + searchText; 
-                    pgFour =  pgNum + 3 + "&searchText=" + searchText;
-                    pgNext =  pgNum + 1 + "&searchText=" + searchText;   
-                    pgLast =  numPages + "&searchText=" + searchText;          
-                } else{
+                console.log("len/25 is " + len / 25);
+                var numPages = Math.round(len / 25);
+
+                if (searchText) {
+                    pgFirst = 1 + "&searchText=" + searchText;
+                    pgLast = numPages + "&searchText=" + searchText;
+                    pgOne = pgNum + '&searchText=' + searchText;
+
+                    if (pgNum - 1 >= 1) pgPrev = pgNum - 1 + "&searchText=" + searchText;
+                    else pgPrev = null;
+                    if (pgNum + 1 <= numPages) pgTwo = pgNum + 1 + "&searchText=" + searchText;
+                    else pgTwo = null;
+                    if (pgNum + 2 <= numPages) pgThree = pgNum + 2 + "&searchText=" + searchText;
+                    else pgThree = null;
+                    if (pgNum + 3 <= numPages) pgFour = pgNum + 3 + "&searchText=" + searchText;
+                    else pgFour = null;
+                    if (pgNum + 1 < numPages) pgNext = pgNum + 1 + "&searchText=" + searchText;
+                    else pgNext = null;
+
+                } else {
                     pgFirst = 1;
-                    pgPrev =  pgNum - 1; 
-                    pgOne =   pgNum;  
-                    pgTwo =   pgNum + 1; 
-                    pgThree = pgNum + 2; 
-                    pgFour =  pgNum + 3; 
-                    pgNext =  pgNum + 1;    
-                    pgLast =  numPages;               
+                    pgLast  = numPages;
+                    pgOne   = pgNum;
+
+                    if (pgNum - 1 >= 1) pgPrev = pgNum - 1;
+                    else pgPrev = null;
+                    if (pgNum + 1 <= numPages) pgTwo = pgNum + 1;
+                    else pgTwo = null;
+                    if (pgNum + 2 <= numPages) pgThree = pgNum + 2;
+                    else pgThree = null;
+                    if (pgNum + 3 <= numPages) pgFour = pgNum + 3;
+                    else pgFour = null;
+                    if (pgNum + 1 < numPages) pgNext = pgNum + 1;
+                    else pgNext = null;
                 }
-            
+
                 res.render("index", {
-                rows: nutriRows,
-                page: pgNum,
-                title: "Home",
-                user: req.user,
-                length: numPages,
-                text: searchText,
-                pageFirst: pgFirst,
-                pagePrev: pgPrev,
-                curpg: pgOne,
-                pageTwo: pgTwo,
-                pageThree: pgThree,
-                pageFour: pgFour,
-                pageNext: pgNext,
-                pageLast: pgLast
+                    rows:      nutriRows,
+                    page:      pgNum,
+                    title:     "Home",
+                    user:      req.user,
+                    length:    numPages,
+                    text:      searchText,
+                    pageFirst: pgFirst,
+                    pagePrev:  pgPrev,
+                    curpg:     pgOne,
+                    pageTwo:   pgTwo,
+                    pageThree: pgThree,
+                    pageFour:  pgFour,
+                    pageNext:  pgNext,
+                    pageLast:  pgLast
+                });
             });
         });
-      //  });
     })
-    .catch(function (err) {
-        console.log(err);
-        next(err);
-    });
+        .catch(function (err) {
+            console.log(err);
+            next(err);
+        });
 }
+
+exports.details = function (req, res) {
+    var id = req.params.id;
+    console.log("id is " + id);
+    var connectionString = process.env.MS_TableConnectionString;
+
+    sql.connect(connectionString).then(function () {
+        sqlString = `
+                SELECT  NDB_No, Shrt_Desc, GmWt_Desc1, GmWt_Desc2, [Water_(g)], [Energ_Kcal], [Protein_(g)],"
+                     + " [Carbohydrt_(g)], [Fiber_TD_(g)], [Sugar_Tot_(g)], [FA_Sat_(g)], [Cholestrl_(mg)]"
+                FROM  NutritionData
+                WHERE NDB_No = '" + ${id} + "'";
+                    `;
+        return new sql.Request().query(sqlString).then(function (recordset) {
+            console.dir(recordset);
+            var record = recordset[0];
+
+            res.render("details", {
+                row: record,
+                user: req.user
+            });
+        });
+    });
+};
 /*
+//"Select count(*) from NutritionData ;"; 
+//sqlString = "SELECT NDB_No, Shrt_Desc, GmWt_Desc1, GmWt_Desc2 from NutritionData order by Shrt_Desc limit 25 offset " + start + ";";
+//"Select count(*) from NutritionData WHERE Shrt_Desc like '" + searchText  + "%';";            
+//sqlString = "SELECT NDB_No, Shrt_Desc, GmWt_Desc1, GmWt_Desc2 from NutritionData WHERE Shrt_Desc like '" + searchText +
+//  "%' order by Shrt_Desc limit 25 offset " + start + ";";
 db.all(sqlString, function (nutriErr, nutriRows) {
     if (nutriErr)
         console.error(nutriErr);
@@ -161,10 +199,7 @@ db.all(sqlString, function (nutriErr, nutriRows) {
     
     });
 });*/
-
-exports.details = function (req, res) {
-    var id = req.params.id;
-    console.log("id is " + id);
+/*
     var sqlStr = "SELECT NDB_No, Shrt_Desc, GmWt_Desc1, GmWt_Desc2, [Water_(g)], [Energ_Kcal], "
         + "[Protein_(g)], [Carbohydrt_(g)], [Fiber_TD_(g)], [Sugar_Tot_(g)], [FA_Sat_(g)], "
         + "[Cholestrl_(mg)] from NutritionData WHERE NDB_No = '" + id + "'";
@@ -174,7 +209,8 @@ exports.details = function (req, res) {
 
         console.log(nutriRow);
         res.render("details", {
-            row: nutriRow
+            row: nutriRow,
+            user: req.user
         });
     });
-};
+*/
