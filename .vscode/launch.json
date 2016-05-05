@@ -16,7 +16,7 @@
 			],
 			"env": {
 				"NODE_ENV": "development",
-				"MS_TableConnectionString": "Driver={SQL Server Native Client 11.0};Server=tcp:sqlnutrition.database.windows.net,1433;Database=nutritiondb;Uid=dsinghania1@sqlnutrition;Pwd={mypasswordhere};Encrypt=yes;TrustServerCertificate=no;Connection Timeout=30;"
+				"MS_TableConnectionString": "Server=tcp:sqlnutrition.database.windows.net,1433;Database=nutritiondb;Uid=dsinghania1@sqlnutrition;Pwd={iamsti11@park};Encrypt=yes;TrustServerCertificate=no;Connection Timeout=3000;"
 			},
 			"externalConsole": false,
 			"sourceMaps": false,
