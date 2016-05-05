@@ -37,29 +37,29 @@
           <div>
             <p>
              <a href="/home?page=<%= pageFirst %>">First</a> 
-              <% if( page === 1) { %>
-                   <% if(text) { %>                    
-                     <a href="/home?page=1&searchText=<%=text%>">Prev</a>
-                    <% } else { %>
-                         <a href="/home?page=1">Prev</a>
-                    <% } %>  
-              <% } else { %>
+              <% if( pagePrev !== null) { %>
                  <a href="/home?page=<%= pagePrev %>">Prev</a>
-                <% } %>
-              <a class="active" href="/home?page=<%= curpg %>"><%= page %></a> 
-              <a href="/home?page=<%= pageTwo %>"><%= page + 1 %></a> 
-              <a href="/home?page=<%= pageThree %>"><%= page + 2 %></a>      
-              <a href="/home?page=<%= pageFour %>"><%= page + 3 %></a>
-              <% if( page === length ) { %> 
-                    <% if(text) { %>  
-                       <a href="/home?page=<%= page %>&searchText=<%=text%>">Next</a>
-                    <% } else { %> 
-                        <a href="/home?page=<%= page %>">Next</a>
-                    <% } %>  
-              <% } else { %>
+              <% } %>
+              
+              <a class="active" href="/home?page=<%= curpg %>"><%= page %></a>
+                
+              <% if( pageTwo !== null) { %>
+                <a href="/home?page=<%= pageTwo %>"><%= page + 1 %></a>
+              <% } %>
+              
+              <% if( pageThree !== null) { %>
+                <a href="/home?page=<%= pageThree %>"><%= page + 2 %></a>
+              <% } %>  
+              
+              <% if( pageFour !== null) { %>    
+                <a href="/home?page=<%= pageFour %>"><%= page + 3 %></a>
+              <% } %>
+              
+              <% if( pageNext !== null ) { %> 
                  <a href="/home?page=<%= pageNext %>">Next</a> 
               <% } %> 
-              <a href="/home?page=<%= pageLast %>">Last</a> 
+              
+              <a href="/home?page=<%= pageLast %>">Last</a>
             </p>
           </div>
       
