@@ -12,7 +12,7 @@ exports.index = function (req, res) {
     });
 };
 
-exports.home = function (req, res) {
+exports.home = function (req, res, next) {
     var sqlString = "", len, dbTotLength = "";
     var pgPrev, PgOne, pgTwo, pgThree, pgFour, pgNext, pgFirst, pgLast;
     var pgNum = req.query.page || 1;
@@ -29,7 +29,7 @@ exports.home = function (req, res) {
             sqlString = `
                 SELECT  NDB_No, Shrt_Desc, GmWt_Desc1, GmWt_Desc2
                 FROM    NutritionData
-                WHERE   Shrt_Desc LIKE '${searchText}'
+                WHERE   Shrt_Desc LIKE '${searchText}%'
                 ORDER BY Shrt_Desc
                 OFFSET  ${skip} ROWS
                 FETCH NEXT 25 ROWS ONLY    
@@ -37,7 +37,7 @@ exports.home = function (req, res) {
             dbTotLength = `
                         SELECT count(*)
                         FROM   NutritionData
-                        WHERE   Shrt_Desc LIKE '${searchText}'
+                        WHERE   Shrt_Desc LIKE '${searchText}%'
                             `;
         } else {
             sqlString = `
@@ -60,8 +60,10 @@ exports.home = function (req, res) {
                 console.dir(recordset1);
                 var record1 = recordset1[0];
                 console.log(record1);
-                len = recordset1[''];
+                len = record1[''];
+                console.log("recordset1 ['']" + len);
                 len = Number(len);
+                console.log("len after number(len is " + len);
                 console.log("len/25 is " + len / 25);
                 var numPages = Math.round(len / 25);
 
@@ -124,7 +126,6 @@ exports.home = function (req, res) {
 }
 
 exports.details = function (req, res) {
-    var sqlStr = "";
     var id = req.params.id;
     console.log("id is " + id);
     var connectionString = process.env.MS_TableConnectionString;
