@@ -1,11 +1,9 @@
 var express = require("express");
 var router = express.Router();
 var app = express();
-//const APIKEY = 'abcd'; 
 var sql = require('mssql');
 
 exports.index = function (req, res) {
-    //res.send("hello World");
     res.render('default', {
         title: 'Home',
         user: req.user
@@ -15,15 +13,16 @@ exports.index = function (req, res) {
 exports.home = function (req, res, next) {
     var sqlString = "", len, dbTotLength = "";
     var pgPrev, PgOne, pgTwo, pgThree, pgFour, pgNext, pgFirst, pgLast;
+    
     var pgNum = req.query.page || 1;
     console.log("page number is " + pgNum);
-    var searchText = req.query.searchText;
-    console.log("search text is " + searchText);
     pgNum = Number(pgNum);
     var skip = 25 * (pgNum - 1);
+    
+    var searchText = req.query.searchText;
+    console.log("search text is " + searchText);    
 
-   // var connectionString = process.env.SQLCONNSTR_MS_TableConnectionString;
-   var connectionString = "Server=tcp:sqlnutrition.database.windows.net,1433;Database=nutritiondb;Uid=dsinghania1@sqlnutrition;Pwd=iamsti11@park;Encrypt=yes;TrustServerCertificate=no;Connection Timeout=3000;"
+   var connectionString = process.env.SQLCONNSTR_MS_TableConnectionString;
 
     sql.connect(connectionString).then(function () {
         if (searchText) {
@@ -54,18 +53,23 @@ exports.home = function (req, res, next) {
                     `;
         }
         return new sql.Request().query(sqlString).then(function (recordset) {
+            
             console.dir(recordset);
             var record = recordset[0];
             console.log(record);
+            
             new sql.Request().query(dbTotLength).then(function (recordset1) {
+                
                 console.dir(recordset1);
                 var record1 = recordset1[0];
                 console.log(record1);
+                
                 len = record1[''];
                 console.log("recordset1 ['']" + len);
                 len = Number(len);
                 console.log("len after number(len is " + len);
                 console.log("len/25 is " + len / 25);
+                
                 var numPages = Math.round(len / 25);
 
                 if (searchText) {
@@ -129,12 +133,10 @@ exports.home = function (req, res, next) {
 exports.details = function (req, res) {
     var id = req.params.id;
     console.log("id is " + id);
-    //var connectionString = process.env.SQLCONNSTR_MS_TableConnectionString;
-    var connectionString = "Server=tcp:sqlnutrition.database.windows.net,1433;Database=nutritiondb;Uid=dsinghania1@sqlnutrition;Pwd=iamsti11@park;Encrypt=yes;TrustServerCertificate=no;Connection Timeout=3000;"
-
+    var connectionString = process.env.SQLCONNSTR_MS_TableConnectionString;
 
     sql.connect(connectionString).then(function () {
-        sqlStr = `
+       var sqlStr = `
                 SELECT  NDB_No, Shrt_Desc, GmWt_Desc1, GmWt_Desc2, [Water_(g)], [Energ_Kcal], [Protein_(g)], [Carbohydrt_(g)], [Fiber_TD_(g)], [Sugar_Tot_(g)], [FA_Sat_(g)], [Cholestrl_(mg)]
                 FROM  NutritionData
                 WHERE NDB_No = '${id}';

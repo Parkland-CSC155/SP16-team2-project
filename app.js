@@ -1,3 +1,4 @@
+var http = require("http");
 var express = require('express');
 var app = express();            //creates an express application
 var routes = require('./routes');
@@ -5,7 +6,8 @@ var passport = require('passport');
 var Strategy = require('passport-local').Strategy;
 var userDb = require('./datasets');
 var bodyParser = require('body-parser');
-
+var path = require("path");
+var logger = require("morgan");
 //Lets define a port we want to listen to
 var PORT = process.env.port || 3000;
 var mssql = require('mssql');
@@ -284,6 +286,6 @@ app.get('*', function (req, res) {
 // Binds and listens for connections on the specified host and port
 // and returns an http.Server object
 var server = http.createServer(app);
-server.listen(port, function(){
-   console.log("app listening on port: " + port);  
+server.listen(PORT, function(){
+   console.log("app listening on port: " + PORT);  
 });
