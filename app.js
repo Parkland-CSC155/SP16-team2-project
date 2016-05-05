@@ -13,7 +13,7 @@ var mssql = require('mssql');
 //var sqlite3 = require('sqlite3').verbose();
 //var db = new sqlite3.Database('./datasets/nutrition.db');
 //var db = new mssql.Database('sqlnutrition.database.windows.net/nutritondb.db'); 
-var config = {
+/*var config = {
     user: '...',
     password: '..',
     server: 'localhost', // You can use 'localhost\\instance' to connect to named instance
@@ -32,7 +32,7 @@ var connection = new sql.Connection(config, function(err) {
 
         console.dir(recordset);
     });
-});
+});*/
 passport.use(new Strategy(function (username, password, cb) { //cb-callback
   userDb.users.findByUsername(username, function (err, user) {
     if (err) { return cb(err); }

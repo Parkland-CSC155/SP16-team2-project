@@ -6,7 +6,7 @@ const APIKEY = 'abcd'; // some unique value that attackers cannot guess
 var mssql = require('mssql');
 //var db = new sqlite3.Database('./datasets/nutrition.db');
 //var db = new mssql.Database('sqlnutrition.database.windows.net/nutritondb.db'); 
-var config = {
+/*var config = {
     user: '...',
     password: '..',
     server: 'localhost', // You can use 'localhost\\instance' to connect to named instance
@@ -26,7 +26,7 @@ var connection = new sql.Connection(config, function(err) {
         console.dir(recordset);
     });
 });
-
+*/
 router.use(function (req, res, next) {
     if (req.baseUrl !== "/api") {
         res.send("no api");
