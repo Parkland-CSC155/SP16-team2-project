@@ -22,7 +22,8 @@ exports.home = function (req, res, next) {
     pgNum = Number(pgNum);
     var skip = 25 * (pgNum - 1);
 
-    var connectionString = process.env.MS_TableConnectionString;
+   // var connectionString = process.env.SQLCONNSTR_MS_TableConnectionString;
+   var connectionString = "Server=tcp:sqlnutrition.database.windows.net,1433;Database=nutritiondb;Uid=dsinghania1@sqlnutrition;Pwd=iamsti11@park;Encrypt=yes;TrustServerCertificate=no;Connection Timeout=3000;"
 
     sql.connect(connectionString).then(function () {
         if (searchText) {
@@ -85,8 +86,8 @@ exports.home = function (req, res, next) {
 
                 } else {
                     pgFirst = 1;
-                    pgLast  = numPages;
-                    pgOne   = pgNum;
+                    pgLast = numPages;
+                    pgOne = pgNum;
 
                     if (pgNum - 1 >= 1) pgPrev = pgNum - 1;
                     else pgPrev = null;
@@ -101,20 +102,20 @@ exports.home = function (req, res, next) {
                 }
 
                 res.render("index", {
-                    rows:      recordset,
-                    page:      pgNum,
-                    title:     "Home",
-                    user:      req.user,
-                    length:    numPages,
-                    text:      searchText,
+                    rows: recordset,
+                    page: pgNum,
+                    title: "Home",
+                    user: req.user,
+                    length: numPages,
+                    text: searchText,
                     pageFirst: pgFirst,
-                    pagePrev:  pgPrev,
-                    curpg:     pgOne,
-                    pageTwo:   pgTwo,
+                    pagePrev: pgPrev,
+                    curpg: pgOne,
+                    pageTwo: pgTwo,
                     pageThree: pgThree,
-                    pageFour:  pgFour,
-                    pageNext:  pgNext,
-                    pageLast:  pgLast
+                    pageFour: pgFour,
+                    pageNext: pgNext,
+                    pageLast: pgLast
                 });
             });
         });
@@ -128,19 +129,21 @@ exports.home = function (req, res, next) {
 exports.details = function (req, res) {
     var id = req.params.id;
     console.log("id is " + id);
-    var connectionString = process.env.MS_TableConnectionString;
+    //var connectionString = process.env.MS_TableConnectionString;
+    var connectionString = "Server=tcp:sqlnutrition.database.windows.net,1433;Database=nutritiondb;Uid=dsinghania1@sqlnutrition;Pwd=iamsti11@park;Encrypt=yes;TrustServerCertificate=no;Connection Timeout=3000;"
+
 
     sql.connect(connectionString).then(function () {
         sqlStr = `
                 SELECT  NDB_No, Shrt_Desc, GmWt_Desc1, GmWt_Desc2, [Water_(g)], [Energ_Kcal], [Protein_(g)], [Carbohydrt_(g)], [Fiber_TD_(g)], [Sugar_Tot_(g)], [FA_Sat_(g)], [Cholestrl_(mg)]
                 FROM  NutritionData
-                WHERE NDB_No = ${id};
+                WHERE NDB_No = '${id}';
                     `;
         return new sql.Request().query(sqlStr).then(function (recordset2) {
             console.dir(recordset2);
             var record2 = recordset2[0];
             console.log(record2);
-            
+
             res.render('details', {
                 row: record2,
                 user: req.user
