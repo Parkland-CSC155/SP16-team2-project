@@ -6,13 +6,9 @@ var sql = require('mssql');
 
 exports.index = function (req, res) {
     //res.send("hello World");
-     var connectionString = process.env.MS_TableConnectionString;
-
-    sql.connect(connectionString).then(function () {
-        res.render('default', {
-            title: 'Home',
-            user: req.user
-        });
+    res.render('default', {
+        title: 'Home',
+        user: req.user
     });
 };
 
