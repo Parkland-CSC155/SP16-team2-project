@@ -129,7 +129,7 @@ exports.home = function (req, res, next) {
 exports.details = function (req, res) {
     var id = req.params.id;
     console.log("id is " + id);
-    //var connectionString = process.env.MS_TableConnectionString;
+    //var connectionString = process.env.SQLCONNSTR_MS_TableConnectionString;
     var connectionString = "Server=tcp:sqlnutrition.database.windows.net,1433;Database=nutritiondb;Uid=dsinghania1@sqlnutrition;Pwd=iamsti11@park;Encrypt=yes;TrustServerCertificate=no;Connection Timeout=3000;"
 
 
