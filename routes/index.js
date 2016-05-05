@@ -79,11 +79,12 @@ exports.home = function (req, res) {
             console.dir(recordset);
             var record = recordset[0];
             console.log(record);
-            new sql.Request().query(dbTotlength).then(function (recordset1) {
+            new sql.Request().query(dbTotLength).then(function (recordset1) {
                 console.dir(recordset1);
                 var record1 = recordset1[0];
-                  console.log(record1);
-                len = recordset1['count(*)'];
+                console.log(record1);
+                len = recordset1[''];
+                len = Number(len);
                 console.log("len/25 is " + len / 25);
                 var numPages = Math.round(len / 25);
 
@@ -121,7 +122,7 @@ exports.home = function (req, res) {
                 }
 
                 res.render("index", {
-                    rows:      record,
+                    rows:      recordset,
                     page:      pgNum,
                     title:     "Home",
                     user:      req.user,
@@ -151,18 +152,18 @@ exports.details = function (req, res) {
     var connectionString = process.env.MS_TableConnectionString;
 
     sql.connect(connectionString).then(function () {
-        sqlString = `
-                SELECT  NDB_No, Shrt_Desc, GmWt_Desc1, GmWt_Desc2, [Water_(g)], [Energ_Kcal], [Protein_(g)],"
-                     + " [Carbohydrt_(g)], [Fiber_TD_(g)], [Sugar_Tot_(g)], [FA_Sat_(g)], [Cholestrl_(mg)]"
+        sqlStr = `
+                SELECT  NDB_No, Shrt_Desc, GmWt_Desc1, GmWt_Desc2, [Water_(g)], [Energ_Kcal], [Protein_(g)], [Carbohydrt_(g)], [Fiber_TD_(g)], [Sugar_Tot_(g)], [FA_Sat_(g)], [Cholestrl_(mg)]
                 FROM  NutritionData
-                WHERE NDB_No = '" + ${id} + "'";
+                WHERE NDB_No = ${id};
                     `;
-        return new sql.Request().query(sqlString).then(function (recordset) {
-            console.dir(recordset);
-            var record = recordset[0];
-  console.log(record);
-            res.render("details", {
-                row: record,
+        return new sql.Request().query(sqlStr).then(function (recordset2) {
+            console.dir(recordset2);
+            var record2 = recordset2[0];
+            console.log(record2);
+            
+            res.render('details', {
+                row: record2,
                 user: req.user
             });
         });
