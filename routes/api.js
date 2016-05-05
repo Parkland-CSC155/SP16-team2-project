@@ -1,32 +1,8 @@
 var express = require("express");
 var router = express.Router();
 var app = express();
-const APIKEY = 'abcd'; // some unique value that attackers cannot guess
-//var sqlite3 = require('sqlite3').verbose();
-var mssql = require('mssql');
-//var db = new sqlite3.Database('./datasets/nutrition.db');
-//var db = new mssql.Database('sqlnutrition.database.windows.net/nutritondb.db'); 
-/*var config = {
-    user: '...',
-    password: '..',
-    server: 'localhost', // You can use 'localhost\\instance' to connect to named instance
-    database: 'sqlnutrition.database.windows.net/nutritondb.db',
-    options: {
-        encrypt: true // Use this if you're on Windows Azure
-    }
-}
-
-var connection = new sql.Connection(config, function(err) {
-    // ... error checks
-    // Query
-    var request = new sql.Request(connection); // or: var request = connection.request();
-    request.query('select 1 as number', function(err, recordset) {
-        // ... error checks
-
-        console.dir(recordset);
-    });
-});
-*/
+const APIKEY = 'abcd'; 
+var sql = require('mssql');
 router.use(function (req, res, next) {
     if (req.baseUrl !== "/api") {
         res.send("no api");
@@ -54,52 +30,106 @@ router.use(function (req, res, next) {
 });
 
 // `/api/search/{searchText}?page={pageNumber}&apiKey={apiKey}` 
-router.get("/search/:text", function (req, res) {
+router.get("/search/:text", function (req, res, next) {
+    var sqlString = "";
     var searchText = req.params.text;
     var pgNum = req.query.page || 1;
     console.log("page num is " + pgNum);
     pgNum = Number(pgNum);
-    if (searchText) {
-        var start = 25 * (pgNum - 1);
-        var nutriSql = "SELECT NDB_No, Shrt_Desc, GmWt_Desc1, GmWt_Desc2 from NutritionData WHERE Shrt_Desc like '" + searchText +
-                       "%' order by Shrt_Desc limit 25 offset " + start;
-        db.all(nutriSql, function (nutriErr, nutriRows) {
-            if (nutriErr)
-                console.error(nutriErr);
+    var skip = 25 * (pgNum - 1);
+    
+    var connectionString = process.env.MS_TableConnectionString;
 
-            res.json(nutriRows);
+    sql.connect(connectionString).then(function () {
+        if (searchText) {
+            sqlString =  `
+                SELECT  NDB_No, Shrt_Desc, GmWt_Desc1, GmWt_Desc2
+                FROM    NutritionData
+                WHERE   Shrt_Desc LIKE '${searchText}'
+                ORDER BY Shrt_Desc
+                OFFSET  ${skip} ROWS
+                FETCH NEXT 25 ROWS ONLY    
+                    `;
+        } else {
+            sqlString = `
+                SELECT  NDB_No, Shrt_Desc, GmWt_Desc1, GmWt_Desc2
+                FROM    NutritionData
+                ORDER BY Shrt_Desc
+                OFFSET  ${skip} ROWS
+                FETCH NEXT 25 ROWS ONLY    
+                    `;
+        }
+        return new sql.Request().query(sqlString).then(function (recordset) {
+            console.dir(recordset);
+            var record = recordset[0];
+            console.log(record);
+            res.json(recordset);
         });
-    }
+    })
+    .catch(function (err) {
+        console.log(err);
+        next(err);
+    });
 });
 
 //- `/api/list?page={pageNumber}&apiKey={apiKey}`
-router.get("/list", function (req, res) {
-
+router.get("/list", function (req, res, next) {
+    var sqlString = "";
     var pgNum = req.query.page || 1;
     var start = 25 * (pgNum - 1);
-    //SELECT * from NutritionData WHERE  Shrt_Desc like 'a%' order by NDB_No offset 25 rows fetch next 5 rows only
-    //sql server --> var sqlString = "SELECT [Fiber_TD_(g)], [Cholestrl_(mg)] from NutritionData order by NDB_No offset " + start + " rows fetch next 25 rows only";
-    //for sqlite
-    var sqlString = "SELECT NDB_No, Shrt_Desc, GmWt_Desc1, GmWt_Desc2 from NutritionData order by Shrt_Desc limit 25 offset " + start;
+    
+    var connectionString = process.env.MS_TableConnectionString;
 
-    db.all(sqlString, function (nutriErr, nutriRows) {
-        if (nutriErr)
-            console.error(nutriErr);
+    sql.connect(connectionString).then(function () {
+        //for sqlite
+       sqlString =  `
+                SELECT  NDB_No, Shrt_Desc, GmWt_Desc1, GmWt_Desc2
+                FROM    NutritionData
+                ORDER BY Shrt_Desc
+                OFFSET  ${skip} ROWS
+                FETCH NEXT 25 ROWS ONLY    
+                    `;
 
-        res.json(nutriRows);
+        return new sql.Request().query(sqlString).then(function (recordset) {
+            console.dir(recordset);
+            var record = recordset[0];
+            console.log(record);
+            res.json(recordset);
+        });
+    })
+    .catch(function (err) {
+        console.log(err);
+        next(err);
     });
 });
 
 //- `/api/{id}&apiKey={apiKey}` 
-router.get("/details/:id", function (req, res) {
+router.get("/details/:id", function (req, res, next) {
+    var sqlStr = "";
     var id = req.params.id;
     console.log("id is " + id);
-    var sqlStr = "SELECT NDB_No, Shrt_Desc, GmWt_Desc1, GmWt_Desc2 from NutritionData WHERE NDB_No = '" + id + "'";
-    db.get(sqlStr, function (nutriErr, nutriRows) {
-        if (nutriErr)
-            console.error(nutriErr);
+    var connectionString = process.env.MS_TableConnectionString;
 
-        res.json(nutriRows);
+    sql.connect(connectionString).then(function () {
+        sqlStr = `
+                SELECT  NDB_No, Shrt_Desc, GmWt_Desc1, GmWt_Desc2, [Water_(g)], [Energ_Kcal], [Protein_(g)], [Carbohydrt_(g)], [Fiber_TD_(g)], [Sugar_Tot_(g)], [FA_Sat_(g)], [Cholestrl_(mg)]
+                FROM  NutritionData
+                WHERE NDB_No = ${id};
+                    `;
+        return new sql.Request().query(sqlStr).then(function (recordset2) {
+            console.dir(recordset2);
+            var record2 = recordset2[0];
+            console.log(record2);
+            
+            res.render('details', {
+                row: record2,
+                user: req.user
+            });
+        });
+    })
+    .catch(function (err) {
+        console.log(err);
+        next(err);
     });
 });
 module.exports = router;
