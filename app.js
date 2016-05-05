@@ -6,33 +6,9 @@ var Strategy = require('passport-local').Strategy;
 var userDb = require('./datasets');
 var bodyParser = require('body-parser');
 
-//var connectionString = process.env.MS_TableConnectionString;   //my db credentials
 //Lets define a port we want to listen to
 var PORT = process.env.port || 3000;
 var mssql = require('mssql');
-//var sqlite3 = require('sqlite3').verbose();
-//var db = new sqlite3.Database('./datasets/nutrition.db');
-//var db = new mssql.Database('sqlnutrition.database.windows.net/nutritondb.db'); 
-/*var config = {
-    user: '...',
-    password: '..',
-    server: 'localhost', // You can use 'localhost\\instance' to connect to named instance
-    database: 'sqlnutrition.database.windows.net/nutritondb.db',
-    options: {
-        encrypt: true // Use this if you're on Windows Azure
-    }
-}
-
-var connection = new sql.Connection(config, function(err) {
-    // ... error checks
-    // Query
-    var request = new sql.Request(connection); // or: var request = connection.request();
-    request.query('select 1 as number', function(err, recordset) {
-        // ... error checks
-
-        console.dir(recordset);
-    });
-});*/
 passport.use(new Strategy(function (username, password, cb) { //cb-callback
   userDb.users.findByUsername(username, function (err, user) {
     if (err) { return cb(err); }
