@@ -128,6 +128,13 @@ app.post("/calculator/food", function(req, res, next){
   });
 
 //working on updating the db with this
+//its just adding the first one
+//need to make it so there is
+// copy this from the user
+// var records = [
+//     { id: 1, username: 'jack', password: 'secret', displayName: 'Jack', emails: [ { value: 'jack@example.com' } ] }
+//   , { id: 2, username: 'jill', password: 'birthday', displayName: 'Jill', emails: [ { value: 'jill@example.com' } ] }
+// ];
 app.post("/calculator/form", function(req, res, next){
   
   var searchDB = req.body.searchDB;
