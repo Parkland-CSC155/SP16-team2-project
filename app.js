@@ -10,7 +10,7 @@ var path = require("path");
 var logger = require("morgan");
 //Lets define a port we want to listen to
 var PORT = process.env.port || 3000;
-var mssql = require('mssql');
+var sql = require('mssql');
 
 passport.use(new Strategy(function (username, password, cb) { //cb-callback
   userDb.users.findByUsername(username, function (err, user) {
@@ -105,7 +105,6 @@ app.get('/calculator/add', require('connect-ensure-login').ensureLoggedIn(), fun
 app.post("/calculator/food", function(req, res, next){
   var food = req.body.food;
   var amount = req.body.amount;
-  typeof(food);
   
   for(var i = 0; i < req.session.searchArray.length; i++)
   {
@@ -132,27 +131,38 @@ app.post("/calculator/food", function(req, res, next){
           });
   });
 
+
 //working on updating the db with this
 app.post("/calculator/form", function(req, res, next){
-  
+  var connectionString = process.env.SQLCONNSTR_MS_TableConnectionString;
   var searchDB = req.body.searchDB;
-  var calcsql = "SELECT * from NutritionData WHERE  Shrt_Desc like '" + searchDB + "%'";
   req.session.searchArray = [];
-  db.all(calcsql, function(nutriErr, nutriRows){
-            var data=[];
-            var data1=[];
-            var data2=[];
-            var data3=[];
-            var data4=[];
-            
-            nutriRows.forEach(function (nutriRows) {  
-              
-              var a = nutriRows.Shrt_Desc;
-              var a1 = nutriRows.Energ_Kcal;
-              var a2 = nutriRows['Protein_(g)'];
-              var a3 = nutriRows['Carbohydrt_(g)'];
-              var a4 = nutriRows['Sugar_Tot_(g)'];
-              //making sure the data isnt null
+  
+    sql.connect(connectionString).then(function () {
+       var sqlStr = `
+                SELECT * 
+                FROM NutritionData
+                WHERE  Shrt_Desc LIKE '${searchDB}%'
+                `;
+        return new sql.Request().query(sqlStr).then(function (recordset) {
+        //console.log(recordset[0]);
+        //console.dir(recordset);
+	
+        var data=[];
+        var data1=[];
+        var data2=[];
+        var data3=[];
+        var data4=[]; 
+
+        for(var i = 0; i < recordset.length; i++)
+        {
+          var a = recordset[i].Shrt_Desc;
+          var a1 = recordset[i].Energ_Kcal;
+          var a2 = recordset[i]['Protein_(g)'];
+          var a3 = recordset[i]['Carbohydrt_(g)'];
+          var a4 = recordset[i]['Sugar_Tot_(g)'];
+          
+          //making sure the data isnt null
               if (a1 == null){
                 a1 = 0;
               }
@@ -174,25 +184,22 @@ app.post("/calculator/form", function(req, res, next){
                   sugar: a4
               };
               
-              req.session.searchArray.push(item);
-              
-              
-                            
-        })
-        var data=[];
-        var data1=[];
-        var data2=[];
-        var data3=[];
-        var data4=[];
-       
+        req.session.searchArray.push(item);      
+        }
         
+        console.log(req.session.searchArray[0]);
         req.session.save( function(err) {
             req.session.reload( function (err) {
               res.redirect("/calculator/add"); });
-         });
-     });
+      });
   });
   
+  });
+});
+    
+       
+        
+    
 
 app.get("/session-example", function (req, res, next) {
 
