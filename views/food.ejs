@@ -12,7 +12,6 @@
 <% include partials/page/header.ejs %>
 <% include partials/page/nav.ejs %>
 
-  <h1><%= pagetitle %> -- <b><%= title %></b></h1>
   <p><a href="/calculator">Back</a></p>
 
 <form action="/calculator/form" method="post">
@@ -73,7 +72,7 @@
     <table border="1" >
     </tr>  
       <tr>
-      <th>Calories</th><th>Sugar</th><th>Protein</th><th>Carbs</th>
+      <th>Calories</th><th>Sugar (grams)</th><th>Protein (grams)</th><th>Carbs (grams)</th>
         <tr>
           <td><%= totalCal.toFixed(0) %></td>
           <td><%= totalSugar.toFixed(2) %></td>

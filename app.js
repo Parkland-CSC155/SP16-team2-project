@@ -75,7 +75,7 @@ app.get('/calculator', require('connect-ensure-login').ensureLoggedIn(), functio
     //working on these
     req.session.object = [];
     
-    res.render('calc', {
+    res.render('calculator', {
        title: 'Calculator Page'
     });
 });
@@ -84,7 +84,7 @@ app.get('/calculator', require('connect-ensure-login').ensureLoggedIn(), functio
 app.get('/calculator/add', require('connect-ensure-login').ensureLoggedIn(), function(req, res){
     
     
-    res.render('addFood', {
+    res.render('food', {
         title: 'Adding Ingredients',
         search: 'Search the database for food',
         searchArray: req.session.searchArray,
