@@ -73,10 +73,7 @@ app.get('/calculator', require('connect-ensure-login').ensureLoggedIn(), functio
     req.session.servings = [];
     
     //working on these
-    req.session.cal = [];
-    req.session.pro = [];
-    req.session.sugar = [];
-    req.session.carbs = [];
+    req.session.object = [];
     
     res.render('calc', {
        title: 'Calculator Page'
@@ -85,28 +82,22 @@ app.get('/calculator', require('connect-ensure-login').ensureLoggedIn(), functio
 
 //route that adds and searches the food in the database
 app.get('/calculator/add', require('connect-ensure-login').ensureLoggedIn(), function(req, res){
-            
-    console.log("name:" + req.session.searchArray);        
-    console.log('cal:' + req.session.cal);
-    console.log('pro:' + req.session.pro);
-    console.log('carb:' + req.session.sugar);
-    console.log('sugar:' + req.session.carbs);   
+    
     
     res.render('addFood', {
         title: 'Adding Ingredients',
         search: 'Search the database for food',
         searchArray: req.session.searchArray,
-        incart: "items in the cart",
+        incart: "Items in the cart",
         cart: req.session.Ingredients,
-        serving: req.session.servings
-       
-    //    //working on these
-    //     calories: req.session.cal,
-    //     protein: req.session.pro,
-    //     sugar: req.session.sugar,
-    //     carbs: req.session.carbs  
-        
-          
+        serving: req.session.servings,
+        object: req.session.object,
+        total: "Total:",
+        totalCal: 0,
+        totalPro: 0,
+        totalSugar: 0,
+        totalCarbs: 0
+     
     });
 });
 
@@ -114,7 +105,21 @@ app.get('/calculator/add', require('connect-ensure-login').ensureLoggedIn(), fun
 app.post("/calculator/food", function(req, res, next){
   var food = req.body.food;
   var amount = req.body.amount;
+  typeof(food);
   
+  for(var i = 0; i < req.session.searchArray.length; i++)
+  {
+    var str1 = '' + food;
+    var str2 = '' + req.session.searchArray[i].name;
+    var n = str1.localeCompare(str2);
+    if(n == 0)
+    {
+      req.session.object.push(req.session.searchArray[i]);
+    }
+  }
+  
+  //console.log("food:" + food);
+  console.log(req.session.object);
   if (!food == '')
   {
     req.session.Ingredients.push(food);
@@ -128,13 +133,6 @@ app.post("/calculator/food", function(req, res, next){
   });
 
 //working on updating the db with this
-//its just adding the first one
-//need to make it so there is
-// copy this from the user
-// var records = [
-//     { id: 1, username: 'jack', password: 'secret', displayName: 'Jack', emails: [ { value: 'jack@example.com' } ] }
-//   , { id: 2, username: 'jill', password: 'birthday', displayName: 'Jill', emails: [ { value: 'jill@example.com' } ] }
-// ];
 app.post("/calculator/form", function(req, res, next){
   
   var searchDB = req.body.searchDB;
@@ -178,14 +176,9 @@ app.post("/calculator/form", function(req, res, next){
               
               req.session.searchArray.push(item);
               
+              
                             
         })
-        req.session.searchArray = data.slice();
-        req.session.cal = data1.slice();
-        req.session.pro = data2.slice();
-        req.session.carbs = data3.slice();
-        req.session.sugar = data4.slice();
-        
         var data=[];
         var data1=[];
         var data2=[];
