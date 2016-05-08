@@ -130,7 +130,7 @@ exports.home = function (req, res, next) {
     });
 }
 
-exports.details = function (req, res) {
+exports.details = function (req, res, next) {
     var id = req.params.id;
     console.log("id is " + id);
     var connectionString = process.env.SQLCONNSTR_MS_TableConnectionString;
